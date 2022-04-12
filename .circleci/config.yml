@@ -1,0 +1,139 @@
+# This is an example config file for CircleCI v2.1 using the `cimg/rust` Docker image
+# NOTE: This config is adapted from a config that uses the `circleci/rust` image.
+#       This config builds successfully. However, it is still a _work in progress_.
+#       Please feel free to use it and _let me know_ if you run into any issues.
+version: 2.1
+
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/rust:1.59.0
+    environment:
+      # Build fails on warnings
+      RUSTFLAGS: '-D warnings'
+    steps:
+      - checkout
+      - run:
+          name: Version information
+          command: rustc --version; cargo --version; rustup --version
+      - restore_cache:
+          keys:
+            - v1-cargo-cache-{{ arch }}-{{ checksum "Cargo.lock" }}
+      - run:
+          name: Build all targets
+          command: cargo build
+      - save_cache:
+          # Note: the 'user' inside of the Docker image is `circleci`
+          paths:
+            - /home/circleci/.cargo/registry
+            - target/debug/.fingerprint
+            - target/debug/build
+            - target/debug/deps
+          key: v1-cargo-cache-{{ arch }}-{{checksum "Cargo.lock" }}
+      - run:
+          name: Run all tests
+          command: cargo test
+
+  security:
+    docker:
+      - image: cimg/rust:1.59.0
+    steps:
+      - checkout
+      - run:
+          name: Version information
+          command: rustc --version; cargo --version; rustup --version
+      - run:
+          name: Set cache permissions
+          command: |
+            sudo chown -R $(whoami):$(id -ng) /home/circleci/.cargo
+      - restore_cache:
+          keys:
+            - v1-cargo-audit-{{ arch }}
+      - run:
+          name: Update APT package registry
+          command: sudo apt update && sudo apt install libssl-dev -yq
+      - run:
+          name: Install cargo-audit
+          command: cargo install cargo-audit
+      - save_cache:
+          paths:
+            - /home/circleci/.cargo
+          key: v1-cargo-audit-{{ arch }}
+      - run:
+          name: Audit Cargo.lock for crates with security vulnerabilities
+          command: cargo audit
+
+  format:
+    docker:
+      - image: cimg/rust:1.59.0
+    steps:
+      - checkout
+      - run:
+          name: Version information
+          command: rustc --version; cargo --version; rustup --version
+      - run:
+          name: Install formatter
+          command: rustup component add rustfmt
+      - run:
+          name: Formatting
+          command: cargo fmt --all -- --check
+
+  lint:
+    docker:
+      - image: cimg/rust:1.59.0
+    steps:
+      - checkout
+      - run:
+          name: Version information
+          command: rustc --version; cargo --version; rustup --version
+      - run:
+          name: Install Clippy
+          command: rustup component add clippy
+      - run:
+          name: Linting
+          command: cargo clippy -- -D warnings
+
+  coverage:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Coverage with Docker
+          command: docker run --security-opt seccomp=unconfined -v "${PWD}:/volume" xd009642/tarpaulin cargo tarpaulin --ignore-tests --avoid-cfg-tarpaulin
+
+# The workflow will **ONLY** run when changes are detected on `main` or `release` branches.
+# Please see the comment below to change this behavior.
+workflows:
+  version: 2
+  build-test:
+    jobs:
+      - build-and-test:
+          filters:
+            branches:
+              only:
+                - /^main/
+                - /^release.*/
+      - security:
+          filters:
+            branches:
+              only:
+                - /^main/
+                - /^release.*/
+      - format:
+          filters:
+            branches:
+              only:
+                - /^main/
+                - /^release.*/
+      - lint:
+          filters:
+            branches:
+              only:
+                - /^main/
+                - /^release.*/
+      - coverage:
+          filters:
+            branches:
+              only:
+                - /^main/
+                - /^release.*/

@@ -1,0 +1,11 @@
+[[prompt]]
+command = "echo hello"
+strict = true
+message = "Are you Sure you want to print hello?"
+answer = ["Yes","No"]
+
+[[prompt]]
+command = "echo hi"
+strict = false
+message = "Are you sure bro?"
+answer = ["Yes","No"]

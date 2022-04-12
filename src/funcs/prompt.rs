@@ -13,17 +13,22 @@ pub struct Prompt {
 impl Prompt {
     pub fn run(&mut self) -> Result<(), std::io::Error> {
         println!("{} [{}/{}]", self.message, self.answer.0, self.answer.1);
+        self.answer = (
+            self.answer.0.trim().to_owned(),
+            self.answer.1.trim().to_owned(),
+        );
         let mut buffer = String::new();
         if !self.strict {
             self.answer.0 = self.answer.0.to_lowercase();
             self.answer.1 = self.answer.1.to_lowercase();
         }
-        while buffer.trim() != self.answer.0.trim() && buffer != self.answer.1 {
+        while buffer.trim() != self.answer.0 && buffer.trim() != self.answer.1 {
             if self.strict {
                 io::stdin().read_line(&mut buffer)?;
+                buffer = buffer.trim().to_owned();
             } else {
                 io::stdin().read_line(&mut buffer)?;
-                buffer = buffer.to_lowercase();
+                buffer = buffer.trim().to_lowercase();
             }
         }
         if self.strict {
@@ -38,7 +43,10 @@ impl Prompt {
             Command::new(args[0]).spawn()?.wait_with_output()?;
             return Ok(());
         }
-        Command::new(args[0]).args(&args[1..]).spawn()?.wait_with_output()?;
+        Command::new(args[0])
+            .args(&args[1..])
+            .spawn()?
+            .wait_with_output()?;
 
         Ok(())
     }

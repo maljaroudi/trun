@@ -1,18 +1,19 @@
+use super::runner::Runner;
 use serde::{Deserialize, Serialize};
 use std::io;
 use std::process::Command;
-pub use toml::*;
 #[derive(Deserialize, Serialize)]
 pub struct Prompt {
+    name: String,
     strict: bool,
     command: String,
     message: String,
     answer: (String, String),
 }
 
-impl Prompt {
-    pub fn run(&mut self) -> Result<(), std::io::Error> {
-        println!("{} [{}/{}]", self.message, self.answer.0, self.answer.1);
+impl Runner for Prompt {
+    fn run(&mut self) -> Result<(), std::io::Error> {
+        println!("TASK {}", self.name);
         self.answer = (
             self.answer.0.trim().to_owned(),
             self.answer.1.trim().to_owned(),
@@ -23,6 +24,8 @@ impl Prompt {
             self.answer.1 = self.answer.1.to_lowercase();
         }
         while buffer.trim() != self.answer.0 && buffer.trim() != self.answer.1 {
+            println!("{} [{}/{}]", self.message, self.answer.0, self.answer.1);
+            buffer.clear();
             if self.strict {
                 io::stdin().read_line(&mut buffer)?;
                 buffer = buffer.trim().to_owned();

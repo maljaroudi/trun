@@ -100,6 +100,18 @@ jobs:
       - run:
           name: Coverage with Docker
           command: docker run --security-opt seccomp=unconfined -v "${PWD}:/volume" xd009642/tarpaulin cargo tarpaulin --ignore-tests --avoid-cfg-tarpaulin
+  build-mac:
+    macos:
+      xcode: 12.5.1
+    steps:
+      - run:
+          name: Install Rust
+          command: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      - run:
+          name: Build Release
+          command: cargo b --release
+      - store_artifacts:
+          path: target/release
 
 # The workflow will **ONLY** run when changes are detected on `main` or `release` branches.
 # Please see the comment below to change this behavior.

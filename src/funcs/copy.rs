@@ -3,6 +3,7 @@ use serde::Deserialize;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
+use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use twox_hash::xxh3::hash64;
 #[derive(Deserialize)]
@@ -11,6 +12,7 @@ pub struct Copy {
     check: bool,
     src: PathBuf,
     dest: PathBuf,
+    permissions: Option<u32>,
 }
 
 impl Runner for Copy {
@@ -19,6 +21,7 @@ impl Runner for Copy {
         println!("TASK {}", self.name);
         let dest = Path::new(&self.dest);
         let src = Path::new(&self.src);
+
         if self.check {
             if dest.exists() && src.exists() {
                 let mut d_open = BufReader::new(File::open(dest)?);
@@ -41,6 +44,13 @@ impl Runner for Copy {
         }
         println!("COPYING FILES...");
         std::fs::copy(&src, &dest)?;
+        if let Some(perm) = self.permissions {
+            println!("Setting Permissions");
+            std::fs::set_permissions(
+                dest,
+                std::fs::Permissions::from_mode(u32::from_str_radix(&format!("{perm}"), 8).unwrap()),
+            )?;
+        }
 
         println!("=================================================");
         Ok(())

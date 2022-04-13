@@ -13,6 +13,7 @@ pub struct Prompt {
 
 impl Runner for Prompt {
     fn run(&mut self) -> Result<(), std::io::Error> {
+        println!("=================================================");
         println!("TASK {}", self.name);
         self.answer = (
             self.answer.0.trim().to_owned(),
@@ -36,14 +37,17 @@ impl Runner for Prompt {
         }
         if self.strict {
             if buffer == self.answer.1 {
+                println!("=================================================");
                 return Ok(());
             }
         } else if buffer == self.answer.1.to_lowercase() {
+            println!("=================================================");
             return Ok(());
         }
         let args = self.command.split_whitespace().collect::<Vec<&str>>();
         if args.len() == 1 {
             Command::new(args[0]).spawn()?.wait_with_output()?;
+            println!("=================================================");
             return Ok(());
         }
         Command::new(args[0])
@@ -51,6 +55,7 @@ impl Runner for Prompt {
             .spawn()?
             .wait_with_output()?;
 
+        println!("=================================================");
         Ok(())
     }
 }

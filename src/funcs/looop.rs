@@ -10,12 +10,14 @@ pub struct Loop {
 
 impl Runner for Loop {
     fn run(&mut self) -> Result<(), std::io::Error> {
+        println!("=================================================");
         println!("TASK {}", self.name);
         let args = self.command.split_whitespace().collect::<Vec<&str>>();
         if args.len() == 1 {
             for _ in 0..self.iterations {
                 Command::new(args[0]).spawn()?.wait_with_output()?;
             }
+            println!("=================================================");
             return Ok(());
         }
         for _ in 0..self.iterations {
@@ -24,6 +26,7 @@ impl Runner for Loop {
                 .spawn()?
                 .wait_with_output()?;
         }
+        println!("=================================================");
         Ok(())
     }
 }

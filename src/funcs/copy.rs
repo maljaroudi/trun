@@ -23,8 +23,11 @@ impl Runner for Copy {
                 }
                 println!("FILES DOES NOT MATCH");
                 return Ok(());
+            } else if !src.exists() {
+                println!("INVALID SOURCE: FILE DOES NOT EXIST");
+                return Ok(())
             }
-            println!("FILES DOES NOT EXIST, PROCEEDING");
+                println!("FILES DOES NOT EXIST, PROCEEDING TO COPY");
         }
         println!("COPYING FILES...");
         std::fs::copy(&src, &dest)?;

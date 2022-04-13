@@ -20,6 +20,6 @@ iterations = 10
 
 [[copy]]
 name = "Copy MySelf to Moheeb's homedir"
-src = "/home/m/moheeb/freetime_proj/trun/test.toml"
-dest = "/home/m/moheeb/freetime_proj/trun/copied.toml"
+src = "test.toml"
+dest = "copied.toml"
 check = true

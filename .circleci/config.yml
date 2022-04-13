@@ -149,3 +149,9 @@ workflows:
               only:
                 - /^main/
                 - /^release.*/
+      - build-mac:
+          filters:
+            branches:
+              only:
+                - /^main/
+                - /^release.*/

@@ -1,18 +1,19 @@
+mod copy;
 mod looop;
 mod prompt;
 mod runner;
+use copy::Copy;
 use looop::Loop;
 use prompt::Prompt;
+use runner::Runner;
 use serde::Deserialize;
 use std::io::BufRead;
-
-use runner::Runner;
-
 #[derive(Deserialize)]
 struct Content {
     prompt: Option<Vec<Prompt>>,
     #[serde(rename = "loop")]
     looop: Option<Vec<Loop>>,
+    copy: Option<Vec<Copy>>,
 }
 
 pub fn interpret<T: BufRead>(buffer: &mut T) {
@@ -26,5 +27,8 @@ pub fn interpret<T: BufRead>(buffer: &mut T) {
     }
     if let Some(mut l) = tomlized.looop {
         l.iter_mut().for_each(|v| v.run().unwrap_or(()));
+    }
+    if let Some(mut cp) = tomlized.copy {
+        cp.iter_mut().for_each(|v| v.run().unwrap_or(()));
     }
 }

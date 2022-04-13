@@ -16,3 +16,10 @@ answer = ["Yes","No"]
 name = "Say What 10 times"
 command = "echo What"
 iterations = 10
+
+
+[[copy]]
+name = "Copy MySelf to Moheeb's homedir"
+src = "/home/m/moheeb/freetime_proj/trun/test.toml"
+dest = "/home/m/moheeb/freetime_proj/trun/copied.toml"
+check = true

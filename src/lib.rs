@@ -1,5 +1,8 @@
 pub mod funcs;
+use std::alloc::System;
 
+#[global_allocator]
+static A: System = System;
 #[cfg(test)]
 mod tests {
     #[test]

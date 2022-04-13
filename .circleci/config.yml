@@ -113,7 +113,7 @@ jobs:
           command: cargo b --release
       - run:
           name: Compress Release
-          command: tar macos_build.tar.gz czvf target/release/trun
+          command: tar czvf macos_build.tar.gz target/release/trun
       - store_artifacts:
           path: macos_build.tar.gz
 

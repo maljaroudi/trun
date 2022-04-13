@@ -111,8 +111,11 @@ jobs:
       - run:
           name: Build Release
           command: cargo b --release
+      - run:
+          name: Compress Release
+          command: tar macos_build.tar.gz czvf target/release/trun
       - store_artifacts:
-          path: target/release
+          path: macos_build.tar.gz
 
 # The workflow will **ONLY** run when changes are detected on `main` or `release` branches.
 # Please see the comment below to change this behavior.

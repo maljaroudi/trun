@@ -1,3 +1,4 @@
+#!/Users/egoist/Projects/trun/target/release/trun
 [[prompt]]
 name = "Say Hello"
 command = "echo hello"
@@ -20,7 +21,7 @@ iterations = 10
 
 [[copy]]
 name = "Copy MySelf to Moheeb's homedir"
-src = "/home/m/moheeb/freetime_proj/trun/test.toml"
-dest = "/home/m/moheeb/freetime_proj/trun/copied.toml"
+src = "test.toml"
+dest = "copied.toml"
 check = true
 permissions = 777

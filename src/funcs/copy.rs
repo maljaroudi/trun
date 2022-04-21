@@ -5,7 +5,7 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
-use twox_hash::xxh3::hash64;
+use xxhash_rust::xxh3::xxh3_64;
 #[derive(Deserialize)]
 pub struct Copy {
     name: String,
@@ -30,7 +30,7 @@ impl Runner for Copy {
                 let mut s_open = BufReader::new(File::open(src)?);
                 let mut s_bytes = vec![];
                 s_open.read_to_end(&mut s_bytes)?;
-                if hash64(&d_bytes) == hash64(&s_bytes) {
+                if xxh3_64(&d_bytes) == xxh3_64(&s_bytes) {
                     println!("BOTH FILES MATCHES");
                     println!("=================================================");
                     return Ok(());

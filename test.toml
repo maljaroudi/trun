@@ -1,4 +1,4 @@
-#!/Users/egoist/Projects/trun/target/release/trun
+#!/home/egoist/projects/trun/target/release/trun
 [[prompt]]
 name = "Say Hello"
 command = "echo hello"
@@ -17,6 +17,10 @@ answer = ["Yes","No"]
 name = "Say What 10 times"
 command = "echo What"
 iterations = 10
+start = 5
+
+
+
 
 
 [[copy]]
@@ -24,4 +28,4 @@ name = "Copy MySelf to Moheeb's homedir"
 src = "test.toml"
 dest = "copied.toml"
 check = true
-permissions = 777
+permissions = 555

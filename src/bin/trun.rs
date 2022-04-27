@@ -10,5 +10,5 @@ fn main() {
     }
     let f = File::open(&args[1]).unwrap();
     let mut buffer = BufReader::new(f);
-    interpret(&mut buffer);
+    interpret(&mut buffer).unwrap();
 }

@@ -5,9 +5,19 @@ use std::alloc::System;
 static A: System = System;
 #[cfg(test)]
 mod tests {
+
+    use super::funcs::interpret;
     #[test]
     fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
+        let mut file = r#"
+         [[prompt]]
+          name = "Say Hello"
+          command = "echo hello"
+          strict = true
+          message = "Are you Sure you want to print hello?"
+          answer = ["Yes","No"]
+            "#
+        .as_bytes();
+        assert_eq!(interpret(&mut file), Ok(()));
     }
 }

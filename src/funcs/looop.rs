@@ -6,6 +6,7 @@ pub struct Loop {
     name: String,
     command: String,
     iterations: usize,
+    start: Option<usize>,
 }
 
 impl Runner for Loop {
@@ -14,13 +15,13 @@ impl Runner for Loop {
         println!("TASK {}", self.name);
         let args = self.command.split_whitespace().collect::<Vec<&str>>();
         if args.len() == 1 {
-            for _ in 0..self.iterations {
+            for _ in self.start.unwrap_or_default()..self.iterations {
                 Command::new(args[0]).spawn()?.wait_with_output()?;
             }
             println!("=================================================");
             return Ok(());
         }
-        for _ in 0..self.iterations {
+        for _ in self.start.unwrap_or_default()..self.iterations {
             Command::new(args[0])
                 .args(&args[1..])
                 .spawn()?

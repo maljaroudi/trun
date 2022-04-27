@@ -48,7 +48,9 @@ impl Runner for Copy {
             println!("Setting Permissions");
             std::fs::set_permissions(
                 dest,
-                std::fs::Permissions::from_mode(u32::from_str_radix(&format!("{perm}"), 8).unwrap()),
+                std::fs::Permissions::from_mode(
+                    u32::from_str_radix(&format!("{perm}"), 8).unwrap(),
+                ),
             )?;
         }
 

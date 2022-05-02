@@ -1,11 +1,11 @@
 mod file;
+mod file_content;
 mod looop;
 mod prompt;
 mod runner;
-mod file_content;
 use file::TFile;
-use looop::Loop;
 use file_content::LineInFile;
+use looop::Loop;
 use prompt::Prompt;
 use runner::Runner;
 use serde::Deserialize;
@@ -17,7 +17,7 @@ struct Content {
     looop: Option<Vec<Loop>>,
     file: Option<Vec<TFile>>,
     #[serde(rename = "lineinfile")]
-    line_in_file: Option<Vec<LineInFile>>
+    line_in_file: Option<Vec<LineInFile>>,
 }
 
 pub fn interpret<T: BufRead>(buffer: &mut T) -> Result<(), toml::de::Error> {
@@ -35,9 +35,8 @@ pub fn interpret<T: BufRead>(buffer: &mut T) -> Result<(), toml::de::Error> {
     if let Some(mut cp) = tomlized.file {
         cp.iter_mut().for_each(|v| v.run().unwrap_or(()));
     };
-    if let Some(mut fc) =  tomlized.line_in_file {
+    if let Some(mut fc) = tomlized.line_in_file {
         fc.iter_mut().for_each(|v| v.run().unwrap_or(()));
-
-     }
+    }
     Ok(())
 }

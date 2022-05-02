@@ -1,32 +1,7 @@
 #! ./target/release/trun
-[[prompt]]
-name = "Say Hello"
-command = "echo hello"
-strict = true
-message = "Are you Sure you want to print hello?"
-answer = ["Yes","No"]
-
-[[prompt]]
-name = "Say Hi"
-command = "echo hi"
-strict = false
-message = "Are you sure bro?"
-answer = ["Yes","No"]
-
-[[loop]]
-name = "Say What 10 times"
-command = "echo What"
-iterations = 10
-start = 5
-
 [[file]]
 name = "Copy MySelf to Moheeb's homedir"
-src = "./test.toml"
-dest = "./copied.toml"
+src = "~! SRCS !~"
+dest = "~! DESTS !~"
+items = { SRCS = ["./Cargo.lock"], DESTS = ["./CargoCopy0"] }
 check = true
-permissions = 777
-
-#[[file]]
-#name = "Remove Copied"
-#src = "./copied.toml"
-#exists = false

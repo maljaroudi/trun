@@ -2,6 +2,7 @@ mod file;
 mod looop;
 mod prompt;
 mod runner;
+mod file_content;
 use file::TFile;
 use looop::Loop;
 use prompt::Prompt;

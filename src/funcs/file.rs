@@ -47,7 +47,7 @@ impl Runner for TFile {
                 return Ok(());
             }
         }
-        if let None = self.dest {
+        if self.dest.is_none() {
             println!("YOU DID NOT PROVIDE A DESTINATION");
             println!("=================================================");
             return Ok(());

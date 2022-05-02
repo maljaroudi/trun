@@ -1,0 +1,5 @@
+#! ./target/release/trun
+[[lineinfile]]
+name = "Add Hello World to Hello.txt"
+file = "./hello.txt"
+line = "Hello World"

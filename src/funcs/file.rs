@@ -7,22 +7,54 @@ use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use xxhash_rust::xxh3::xxh3_64;
 #[derive(Deserialize)]
-pub struct Copy {
+pub struct TFile {
     name: String,
-    check: bool,
+    check: Option<bool>,
     src: PathBuf,
-    dest: PathBuf,
+    dest: Option<PathBuf>,
     permissions: Option<u32>,
+    exists: Option<bool>,
+    #[serde(rename = "move")]
+    moove: Option<bool>,
 }
 
-impl Runner for Copy {
+impl Runner for TFile {
     fn run(&mut self) -> Result<(), std::io::Error> {
         println!("=================================================");
         println!("TASK {}", self.name);
-        let dest = Path::new(&self.dest);
         let src = Path::new(&self.src);
-
-        if self.check {
+        if let Some(exists) = self.exists {
+            if !exists {
+                if src.exists() {
+                    std::fs::remove_file(&src)?;
+                    println!("REMOVING FILE ...");
+                } else {
+                    println!("FILE DOES NOT EXIST. CONTINUING ...");
+                }
+                if self.dest.is_some() {
+                    println!("YOU ASKED TO REMOVE A FILE, A DESTINATION IS NOT NEEDED");
+                }
+                if self.moove.is_some() {
+                    println!("MOVE AND EXISTS CAN'T COEXIST, IGNORING MOVE");
+                }
+                if self.permissions.is_some() {
+                    println!("EXIST CAN'T COEXIST WITH PERMISSIONS");
+                }
+                if self.check.is_some() {
+                    println!("EXIST AND CHECK DOES NOT NEED TO COEXIST");
+                }
+                println!("=================================================");
+                return Ok(());
+            }
+        }
+        if let None = self.dest {
+            println!("YOU DID NOT PROVIDE A DESTINATION");
+            println!("=================================================");
+            return Ok(());
+        }
+        let dest_unwraped = self.dest.as_ref().unwrap();
+        let dest = Path::new(&dest_unwraped);
+        if self.check.unwrap_or(false) {
             if dest.exists() && src.exists() {
                 let mut d_open = BufReader::new(File::open(dest)?);
                 let mut d_bytes = vec![];
@@ -48,8 +80,13 @@ impl Runner for Copy {
             println!("Setting Permissions");
             std::fs::set_permissions(
                 dest,
-                std::fs::Permissions::from_mode(u32::from_str_radix(&format!("{perm}"), 8).unwrap()),
+                std::fs::Permissions::from_mode(
+                    u32::from_str_radix(&format!("{perm}"), 8).unwrap(),
+                ),
             )?;
+        }
+        if self.moove.unwrap_or(false) {
+            std::fs::remove_file(src)?;
         }
 
         println!("=================================================");

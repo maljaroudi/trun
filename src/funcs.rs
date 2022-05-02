@@ -1,8 +1,8 @@
-mod copy;
+mod file;
 mod looop;
 mod prompt;
 mod runner;
-use copy::Copy;
+use file::TFile;
 use looop::Loop;
 use prompt::Prompt;
 use runner::Runner;
@@ -13,7 +13,7 @@ struct Content {
     prompt: Option<Vec<Prompt>>,
     #[serde(rename = "loop")]
     looop: Option<Vec<Loop>>,
-    copy: Option<Vec<Copy>>,
+    file: Option<Vec<TFile>>,
 }
 
 pub fn interpret<T: BufRead>(buffer: &mut T) -> Result<(), toml::de::Error> {
@@ -28,7 +28,7 @@ pub fn interpret<T: BufRead>(buffer: &mut T) -> Result<(), toml::de::Error> {
     if let Some(mut l) = tomlized.looop {
         l.iter_mut().for_each(|v| v.run().unwrap_or(()));
     }
-    if let Some(mut cp) = tomlized.copy {
+    if let Some(mut cp) = tomlized.file {
         cp.iter_mut().for_each(|v| v.run().unwrap_or(()));
     };
     Ok(())

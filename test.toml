@@ -1,4 +1,4 @@
-#!/home/egoist/projects/trun/target/release/trun
+#! ./target/release/trun
 [[prompt]]
 name = "Say Hello"
 command = "echo hello"
@@ -19,13 +19,14 @@ command = "echo What"
 iterations = 10
 start = 5
 
-
-
-
-
-[[copy]]
+[[file]]
 name = "Copy MySelf to Moheeb's homedir"
-src = "test.toml"
-dest = "copied.toml"
+src = "./test.toml"
+dest = "./copied.toml"
 check = true
-permissions = 555
+permissions = 777
+
+#[[file]]
+#name = "Remove Copied"
+#src = "./copied.toml"
+#exists = false

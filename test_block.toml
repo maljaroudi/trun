@@ -2,7 +2,11 @@
 ["TEST BLOCK"]
 module = "BlockInFile"
 name = "Add Hello Block"
-block = "HELLO WORLD 1234"
+block = """
+HELLO WORLD 1234 I am a
+multi line
+string
+"""
 signature = "MOHEEB"
 comment = "//"
 file = "./hello_world.rs"

@@ -69,6 +69,7 @@ impl Runner for BlockInFile {
             writeln!(created, "{}", &self.block)?;
             writeln!(created)?;
             writeln!(created, "{}", &epattern)?;
+            println!("FINISHED WRITING");
             println!("=================================================");
             return Ok(());
         }
@@ -81,15 +82,15 @@ impl Runner for BlockInFile {
         if let Some(start) = s_index {
             let e_index = stringed_buffer.find(&epattern);
             if let Some(end) = e_index {
-                if self.block == stringed_buffer[start + spattern.len()..end].trim() {
+                if self.block.trim() == stringed_buffer[start + spattern.len()..end].trim() {
                     println!("BLOCK FOUND");
                     println!("=================================================");
                     return Ok(());
                 }
-                println!("BLOCK DOESN'T MATCH");
+                println!("BLOCK DOESN'T MATCH REPAIRING ..");
 
                 opened.seek(SeekFrom::Start(start as u64))?;
-                opened.write_all(&b" ".repeat(end + epattern.len() - (start)))?;
+                write!(opened,"{}",&" ".repeat(end + epattern.len() - (start)))?;
                 opened.seek(SeekFrom::Start((start) as u64))?;
                 writeln!(opened, "{}", &spattern)?;
                 writeln!(opened)?;
@@ -104,9 +105,15 @@ impl Runner for BlockInFile {
             }
         }
         // let mut buf_writer = BufWriter::new(opened);
-        // buf_writer.write_all(self.block.as_bytes())?;
-        // println!("FINISHED WRITING");
-        // println!("=================================================");
+        opened.seek(SeekFrom::End(0))?;
+        writeln!(opened, "{}", &spattern)?;
+        writeln!(opened)?;
+        writeln!(opened, "{}", &self.block)?;
+        writeln!(opened)?;
+        writeln!(opened, "{}", &epattern)?;
+        //buf_writer.write_all(self.block.as_bytes())?;
+        println!("FINISHED WRITING");
+        println!("=================================================");
         Ok(())
     }
 }

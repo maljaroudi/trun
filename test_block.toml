@@ -1,0 +1,8 @@
+#! ./target/release/trun
+["TEST BLOCK"]
+module = "BlockInFile"
+name = "Add Hello Block"
+block = "HELLO WORLD 1234"
+signature = "MOHEEB"
+comment = "//"
+file = "./hello_world.rs"

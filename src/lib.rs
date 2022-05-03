@@ -10,7 +10,8 @@ mod tests {
     #[test]
     fn it_works() {
         let mut file = r#"
-         [[prompt]]
+         [prompt]
+          module = "Prompt"
           name = "Say Hello"
           command = "echo hello"
           strict = true

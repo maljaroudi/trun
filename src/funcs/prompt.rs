@@ -1,5 +1,5 @@
 use super::runner::Runner;
-use serde::{Deserialize};
+use serde::Deserialize;
 use std::io;
 use std::process::Command;
 #[derive(Deserialize)]

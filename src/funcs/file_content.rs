@@ -90,7 +90,7 @@ impl Runner for BlockInFile {
                 println!("BLOCK DOESN'T MATCH REPAIRING ..");
 
                 opened.seek(SeekFrom::Start(start as u64))?;
-                write!(opened,"{}",&" ".repeat(end + epattern.len() - (start)))?;
+                write!(opened, "{}", &" ".repeat(end + epattern.len() - (start)))?;
                 opened.seek(SeekFrom::Start((start) as u64))?;
                 writeln!(opened, "{}", &spattern)?;
                 writeln!(opened)?;

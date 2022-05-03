@@ -1,8 +1,8 @@
 use super::runner::Runner;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize};
 use std::io;
 use std::process::Command;
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize)]
 pub struct Prompt {
     name: String,
     strict: bool,
@@ -11,6 +11,7 @@ pub struct Prompt {
     answer: (String, String),
 }
 
+#[typetag::deserialize]
 impl Runner for Prompt {
     fn run(&mut self) -> Result<(), std::io::Error> {
         println!("=================================================");

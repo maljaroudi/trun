@@ -11,8 +11,10 @@ edition = "2021"
 name = "trun"
 
 [dependencies]
+indexmap = { version = "1.8.1", features = ["serde"] }
 serde = { version = "1.0.136", features = ["derive"] }
 toml = "0.5.8"
+typetag = "0.1.8"
 xxhash-rust = { version = "0.8.5", features = ["xxh3"] }
 
 
@@ -21,6 +23,6 @@ xxhash-rust = { version = "0.8.5", features = ["xxh3"] }
 lto = true
 codegen-units = 1
 panic = "abort"
-opt-level = "z"
+opt-level = 3
 strip = true
 

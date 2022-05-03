@@ -1,5 +1,6 @@
 #! ./target/release/trun
-[[lineinfile]]
+["Check Line In File"]
+module = "LineInFile"
 name = "Add Hello World to Hello.txt"
 file = "./hello.txt"
 line = "Hello World"

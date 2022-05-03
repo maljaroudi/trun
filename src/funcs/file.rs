@@ -20,7 +20,7 @@ pub struct TFile {
     moove: Option<bool>,
     items: Option<HashMap<String, Vec<PathBuf>>>,
 }
-
+#[typetag::deserialize(name = "File")]
 impl Runner for TFile {
     fn run(&mut self) -> Result<(), std::io::Error> {
         println!("=================================================");

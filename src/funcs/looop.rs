@@ -8,7 +8,7 @@ pub struct Loop {
     iterations: usize,
     start: Option<usize>,
 }
-
+#[typetag::deserialize]
 impl Runner for Loop {
     fn run(&mut self) -> Result<(), std::io::Error> {
         println!("=================================================");

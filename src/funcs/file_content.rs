@@ -13,7 +13,7 @@ pub struct LineInFile {
     line: String,
     file: PathBuf,
 }
-
+#[typetag::deserialize]
 impl Runner for LineInFile {
     fn run(&mut self) -> Result<(), std::io::Error> {
         println!("=================================================");
@@ -37,10 +37,10 @@ impl Runner for LineInFile {
             println!("=================================================");
             return Ok(());
         }
-        println!("HERE");
         let mut buf_writer = BufWriter::new(opened);
         buf_writer.write_all(self.line.as_bytes())?;
-        println!("HERE2");
+        println!("FINISHED WRITING");
+        println!("=================================================");
         Ok(())
     }
 }

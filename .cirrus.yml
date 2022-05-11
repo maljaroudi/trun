@@ -1,25 +1,13 @@
 task:
-  name: linux
-  container:
-    image: rust:latest
+  matrix:
+    - name: linux
+      container:
+        image: rust:latest
+    - name: macos
+      macos_instance:
+        image: ghcr.io/cirruslabs/macos-monterey-base:latest
+      install_script: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
-  registry_cache:
-    folder: $CARGO_HOME/registry
-    fingerprint_script: cat Cargo.lock
-  target_cache:
-    folder: target
-    fingerprint_script:
-      - rustc --version
-      - cat Cargo.lock
-  build_script: cargo build
-  test_script: cargo test
-  before_cache_script: rm -rf $CARGO_HOME/registry/index
-
-task:
-  name: macos
-  macos_instance:
-    image: ghcr.io/cirruslabs/macos-monterey-base:latest
-  script: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
   registry_cache:
     folder: $CARGO_HOME/registry
     fingerprint_script: cat Cargo.lock

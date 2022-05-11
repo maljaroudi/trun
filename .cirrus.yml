@@ -19,7 +19,8 @@ task:
   name: macos
   macos_instance:
     image: ghcr.io/cirruslabs/macos-monterey-base:latest
-  script: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  pre_script: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  env_script: source $HOME/.cargo/env
   registry_cache:
     folder: $CARGO_HOME/registry
     fingerprint_script: cat Cargo.lock

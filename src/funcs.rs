@@ -4,6 +4,7 @@ mod file_content;
 mod looop;
 mod prompt;
 mod runner;
+mod systemd;
 use indexmap::IndexMap;
 use runner::Runner;
 use std::io::BufRead;

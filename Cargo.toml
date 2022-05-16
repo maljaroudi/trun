@@ -11,6 +11,7 @@ edition = "2021"
 name = "trun"
 
 [dependencies]
+dbus = "0.9.5"
 indexmap = { version = "1.8.1", features = ["serde"] }
 serde = { version = "1.0.136", features = ["derive"] }
 toml = "0.5.8"

@@ -1,0 +1,7 @@
+#! ./target/release/trun
+
+["HELLO TIME"]
+module = "Systemd"
+name = "Time check"
+state = "Enabled"
+service = "sshd"

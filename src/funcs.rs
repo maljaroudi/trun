@@ -4,7 +4,10 @@ mod file_content;
 mod looop;
 mod prompt;
 mod runner;
+
+#[cfg(target_os = "linux")]
 mod systemd;
+
 use indexmap::IndexMap;
 use runner::Runner;
 use std::io::BufRead;

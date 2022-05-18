@@ -11,14 +11,14 @@ edition = "2021"
 name = "trun"
 
 [dependencies]
-dbus = "0.9.5"
 indexmap = { version = "1.8.1", features = ["serde"] }
 serde = { version = "1.0.136", features = ["derive"] }
 toml = "0.5.8"
 typetag = "0.1.8"
 xxhash-rust = { version = "0.8.5", features = ["xxh3"] }
 
-
+[target.'cfg(target_os = "linux")'.dependencies]
+dbus = "0.9.5"
 
 [profile.release]
 lto = true

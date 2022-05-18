@@ -2,6 +2,6 @@
 
 ["HELLO TIME"]
 module = "Systemd"
-name = "Time check"
+name = "Check SSHD"
 state = "Enabled"
 service = "sshd"

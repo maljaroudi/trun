@@ -104,6 +104,24 @@ impl Runner for Systemd {
                 // than just sending the command
             }
             State::Restarted => {
+                if e_state == "disabled" {
+                    let (carries_install_info, _changes): (bool, Vec<String>) = proxy
+                        .method_call(
+                            "org.freedesktop.systemd1.Manager",
+                            "EnableUnitFiles",
+                            (vec![format!("{}.service", self.service)], false, true),
+                        )
+                        .unwrap();
+                    if !carries_install_info {
+                        println!(
+                        "FAILED TO ENABLE THE UNIT FILE: THE UNIT FILE LACKS THE INSTALL SECTION"
+                    );
+                    }
+                    let _reload: () = proxy
+                        .method_call("org.freedesktop.systemd1.Manager", "Reload", ())
+                        .unwrap();
+                }
+
                 let unit_path: (Path,) = proxy
                     .method_call(
                         "org.freedesktop.systemd1.Manager",
@@ -122,10 +140,6 @@ impl Runner for Systemd {
                     .unwrap();
                 println!("ACTIVE {}", active_state);
 
-                if e_state == "disabled" {
-                    // enable the service first
-                    todo!()
-                }
                 let _restart: (Path,) = proxy
                     .method_call("org.freedesktop.systemd1.Unit", "Restart", ("replace",))
                     .unwrap();
@@ -148,7 +162,27 @@ impl Runner for Systemd {
                     .method_call("org.freedesktop.systemd1.Manager", "Reload", ())
                     .unwrap();
             }
-            State::Disabled => {}
+            State::Disabled => {
+                let job: (Path,) = proxy
+                    .method_call(
+                        "org.freedesktop.systemd1.Manager",
+                        "StopUnit",
+                        (format!("{}.service", self.service), "replace"),
+                    )
+                    .unwrap();
+                let changes: (Vec<String>,) = proxy
+                    .method_call(
+                        "org.freedesktop.systemd1.Manager",
+                        "DisableUnitFiles",
+                        (vec![format!("{}.service", self.service)], false),
+                    )
+                    .unwrap();
+                let _reload: () = proxy
+                    .method_call("org.freedesktop.systemd1.Manager", "Reload", ())
+                    .unwrap();
+
+                println!("SERVICE {} HAS BEEN DISABLED AND STOPPED", self.service);
+            }
         }
         Ok(())
     }

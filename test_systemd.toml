@@ -3,5 +3,5 @@
 ["HELLO TIME"]
 module = "Systemd"
 name = "Check SSHD"
-state = "Started"
-service = "sshd"
+state = "Disabled"
+service = "ssh"

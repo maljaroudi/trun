@@ -1,4 +1,6 @@
+#[cfg(target_os = "linux")]
 mod apt;
+
 mod file;
 mod file_content;
 mod looop;

@@ -1,4 +1,4 @@
-#! ./target/release/trun
+#! ../target/release/trun
 
 ["TEST 1"]
 module = "Systemd"

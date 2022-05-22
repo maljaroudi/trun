@@ -1,4 +1,4 @@
-#! ./target/release/trun
+#! ../target/release/trun
 ["COPY TO HOME"]
 module = "File"
 name = "Copy MySelf to Moheeb's homedir"

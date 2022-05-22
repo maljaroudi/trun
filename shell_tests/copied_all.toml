@@ -1,0 +1,45 @@
+#! ../target/release/trun
+["SAY HELLO"]
+module = "Prompt"
+name = "Say Hello"
+command = "echo hello"
+strict = true
+message = "Are you Sure you want to print hello?"
+answer = ["Yes","No"]
+
+["SAY HI WITH STRICT PROMPT"]
+module = "Prompt"
+name = "Say Hi"
+command = "echo hi"
+strict = false
+message = "Are you sure bro?"
+answer = ["Yes","No"]
+
+["LOOP FROM 5 TO 10"]
+module = "Loop"
+name = "Say What 10 times"
+command = "echo What"
+iterations = 10
+start = 5
+
+["COPY all_tests.toml TO copied.toml"]
+module = "File"
+name = "Copy MySelf to Moheeb's homedir"
+src = "./all_tests.toml"
+dest = "./copied_all.toml"
+check = true
+permissions = 777
+
+#[[file]]
+#name = "Remove Copied"
+#src = "./copied.toml"
+#exists = false
+
+
+["SAY HELLO Again"]
+module = "Prompt"
+name = "Say Hello"
+command = "echo hello"
+strict = true
+message = "Are you Sure you want to print hello?"
+answer = ["Yes","No"]

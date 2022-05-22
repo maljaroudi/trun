@@ -1,4 +1,4 @@
-#! ./target/release/trun
+#! ../target/release/trun
 ["SAY HELLO"]
 module = "Prompt"
 name = "Say Hello"

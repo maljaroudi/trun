@@ -1,4 +1,4 @@
-#! ./target/release/trun
+#! ../target/release/trun
 ["TEST BLOCK"]
 module = "BlockInFile"
 name = "Add Hello Block"

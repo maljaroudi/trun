@@ -1,7 +1,22 @@
 #! ./target/release/trun
 
-["HELLO TIME"]
+["TEST 1"]
 module = "Systemd"
-name = "Check SSHD"
+name = "ENABLE SSHD"
+state = "Enabled"
+service = "sshd"
+["TEST 2"]
+module = "Systemd"
+name = "START SSHD"
+state = "Started"
+service = "sshd"
+["TEST 3"]
+module = "Systemd"
+name = "STOP SSHD"
+state = "Stopped"
+service = "sshd"
+["TEST 4"]
+module = "Systemd"
+name = "DISABLE SSHD"
 state = "Disabled"
-service = "ssh"
+service = "sshd"

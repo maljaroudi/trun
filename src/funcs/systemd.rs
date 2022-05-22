@@ -10,6 +10,7 @@ use std::time::Duration;
 #[derive(Deserialize, Debug)]
 enum State {
     Started,
+    Stopped,
     Restarted,
     Enabled,
     Disabled,
@@ -44,8 +45,9 @@ impl Runner for Systemd {
                 "GetUnitFileState",
                 (format!("{}.service", self.service),),
             )
-            .map_err(TError::DbusError)?;
-        eprintln!("{e_state}");
+            .expect("ERROR, SERIVCE DOES NOT EXIST");
+
+        println!("{e_state}");
         //let sub_state: String = proxy.get("org.freedesktop.systemd1.Unit", "SubState").unwrap();
         // println!("SUB STATE {sub_state}");
         if e_state == self.state.to_string().to_lowercase() {
@@ -100,6 +102,36 @@ impl Runner for Systemd {
                 println!("SERVICE HAS STARTED");
                 // TODO: Make sure that the service has fully started rather
                 // than just sending the command
+            }
+            State::Stopped => {
+                let unit_path: Result<(Path,), dbus::Error> = proxy.method_call(
+                    "org.freedesktop.systemd1.Manager",
+                    "GetUnit",
+                    (format!("{}.service", self.service),),
+                );
+                if let Ok(unit_path) = unit_path {
+                    proxy = conn.with_proxy(
+                        "org.freedesktop.systemd1",
+                        unit_path.0,
+                        Duration::from_millis(5000),
+                    );
+
+                    let active_state: String = proxy
+                        .get("org.freedesktop.systemd1.Unit", "ActiveState")
+                        .map_err(TError::DbusError)?;
+                    println!("ACTIVE {}", active_state);
+                    if active_state == "inactive" {
+                        println!("SERVICE IS {active_state} ACTION IS NOT REQUIRED");
+                        return Ok(());
+                    }
+                    let _stop: (Path,) = proxy
+                        .method_call("org.freedesktop.systemd1.Unit", "Stop", ("replace",))
+                        .unwrap();
+                    println!("SERVICE HAS STOPPED");
+                    return Ok(());
+                }
+                println!("Service is Already Stopped");
+                return Ok(());
             }
             State::Restarted => {
                 if e_state == "disabled" {

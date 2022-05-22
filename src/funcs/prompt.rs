@@ -1,4 +1,5 @@
 use super::runner::Runner;
+use super::runner::TError;
 use serde::Deserialize;
 use std::io;
 use std::process::Command;
@@ -13,7 +14,7 @@ pub struct Prompt {
 
 #[typetag::deserialize]
 impl Runner for Prompt {
-    fn run(&mut self) -> Result<(), std::io::Error> {
+    fn run(&mut self) -> Result<(), TError> {
         println!("=================================================");
         println!("TASK {}", self.name);
         self.answer = (
@@ -29,10 +30,14 @@ impl Runner for Prompt {
             println!("{} [{}/{}]", self.message, self.answer.0, self.answer.1);
             buffer.clear();
             if self.strict {
-                io::stdin().read_line(&mut buffer)?;
+                io::stdin()
+                    .read_line(&mut buffer)
+                    .map_err(TError::IOError)?;
                 buffer = buffer.trim().to_owned();
             } else {
-                io::stdin().read_line(&mut buffer)?;
+                io::stdin()
+                    .read_line(&mut buffer)
+                    .map_err(TError::IOError)?;
                 buffer = buffer.trim().to_lowercase();
             }
         }
@@ -47,14 +52,20 @@ impl Runner for Prompt {
         }
         let args = self.command.split_whitespace().collect::<Vec<&str>>();
         if args.len() == 1 {
-            Command::new(args[0]).spawn()?.wait_with_output()?;
+            Command::new(args[0])
+                .spawn()
+                .map_err(TError::CmdError)?
+                .wait_with_output()
+                .map_err(TError::IOError)?;
             println!("=================================================");
             return Ok(());
         }
         Command::new(args[0])
             .args(&args[1..])
-            .spawn()?
-            .wait_with_output()?;
+            .spawn()
+            .map_err(TError::CmdError)?
+            .wait_with_output()
+            .map_err(TError::IOError)?;
 
         println!("=================================================");
         Ok(())

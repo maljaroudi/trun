@@ -3,6 +3,9 @@ task:
     - name: linux
       container:
         image: rust:latest
+      prebuild_script:
+        - apt update
+        - apt install libdbus-1-dev pkg-config -y
     - name: macos
       macos_instance:
         image: ghcr.io/cirruslabs/macos-monterey-base:latest

@@ -1,0 +1,29 @@
+#! ../target/release/trun
+["TEST BLOCK"]
+module = "BlockInFile"
+name = "Add Hello Block"
+block = """
+fn main() {
+    println!("Hello from TRUN");
+}
+"""
+signature = "MOHEEB"
+comment = "//"
+file = "./hello_world.rs"
+
+["Compile Block"]
+module = "Prompt"
+name = "Compile the block in hello_world.rs"
+command = "rustc hello_world.rs"
+message = "Are you Sure you want to compile hello_world.rs?"
+strict = false
+answer = ["Yes", "No"]
+
+
+["Run Compiled Program"]
+module = "Prompt"
+name = "Running hello_world program"
+command = "./hello_world"
+message = "Are you sure you want to run hello_world?"
+strict = false
+answer = ["YES", "No"]

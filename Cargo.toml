@@ -17,7 +17,8 @@ toml = "0.5.8"
 typetag = "0.1.8"
 xxhash-rust = { version = "0.8.5", features = ["xxh3"] }
 
-
+[target.'cfg(target_os = "linux")'.dependencies]
+dbus = "0.9.5"
 
 [profile.release]
 lto = true

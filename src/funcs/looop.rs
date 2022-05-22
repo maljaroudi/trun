@@ -1,4 +1,5 @@
 use super::runner::Runner;
+use super::runner::TError;
 use serde::Deserialize;
 use std::process::Command;
 #[derive(Deserialize)]
@@ -10,13 +11,17 @@ pub struct Loop {
 }
 #[typetag::deserialize]
 impl Runner for Loop {
-    fn run(&mut self) -> Result<(), std::io::Error> {
+    fn run(&mut self) -> Result<(), TError> {
         println!("=================================================");
         println!("TASK {}", self.name);
         let args = self.command.split_whitespace().collect::<Vec<&str>>();
         if args.len() == 1 {
             for _ in self.start.unwrap_or_default()..self.iterations {
-                Command::new(args[0]).spawn()?.wait_with_output()?;
+                Command::new(args[0])
+                    .spawn()
+                    .map_err(TError::CmdError)?
+                    .wait_with_output()
+                    .map_err(TError::IOError)?;
             }
             println!("=================================================");
             return Ok(());
@@ -24,8 +29,10 @@ impl Runner for Loop {
         for _ in self.start.unwrap_or_default()..self.iterations {
             Command::new(args[0])
                 .args(&args[1..])
-                .spawn()?
-                .wait_with_output()?;
+                .spawn()
+                .map_err(TError::CmdError)?
+                .wait_with_output()
+                .map_err(TError::IOError)?;
         }
         println!("=================================================");
         Ok(())

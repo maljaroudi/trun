@@ -1,4 +1,4 @@
-#! ./target/release/trun
+#! ../target/release/trun
 ["Check Line In File"]
 module = "LineInFile"
 name = "Add Hello World to Hello.txt"

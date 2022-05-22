@@ -1,0 +1,29 @@
+#! ../target/release/trun
+
+["TEST 1"]
+module = "Systemd"
+name = "ENABLE SSHD"
+state = "Enabled"
+service = "sshd"
+["TEST 2"]
+module = "Systemd"
+name = "START SSHD"
+state = "Started"
+service = "sshd"
+["TEST 3"]
+module = "Systemd"
+name = "STOP SSHD"
+state = "Stopped"
+service = "sshd"
+["TEST 4"]
+module = "Systemd"
+name = "DISABLE SSHD"
+state = "Disabled"
+service = "sshd"
+
+["TEST 5"]
+module = "Systemd"
+name = "Start SSHD"
+state = "Started"
+service = "sshd"
+enabled = true

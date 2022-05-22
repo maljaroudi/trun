@@ -1,6 +1,6 @@
 use super::runner::TError;
 use super::Runner;
-use dbus::blocking::stdintf::org_freedesktop_dbus::ObjectManager;
+
 use dbus::blocking::stdintf::org_freedesktop_dbus::Properties;
 use dbus::blocking::Connection;
 use dbus::strings::Path;
@@ -27,6 +27,7 @@ pub struct Systemd {
     name: String,
     service: String,
     state: State,
+    enabled: Option<bool>,
 }
 //TODO: complete the systemd module by implementing the State enum variants
 #[typetag::deserialize]
@@ -56,7 +57,7 @@ impl Runner for Systemd {
         }
         match self.state {
             State::Started => {
-                if e_state == "disabled" {
+                if e_state == "disabled" && self.enabled.unwrap_or(false) {
                     let (carries_install_info, _changes): (bool, Vec<String>) = proxy
                         .method_call(
                             "org.freedesktop.systemd1.Manager",
@@ -77,10 +78,11 @@ impl Runner for Systemd {
                 let unit_path: (Path,) = proxy
                     .method_call(
                         "org.freedesktop.systemd1.Manager",
-                        "GetUnit",
+                        "LoadUnit",
                         (format!("{}.service", self.service),),
                     )
                     .map_err(TError::DbusError)?;
+
                 proxy = conn.with_proxy(
                     "org.freedesktop.systemd1",
                     unit_path.0,
@@ -106,7 +108,7 @@ impl Runner for Systemd {
             State::Stopped => {
                 let unit_path: Result<(Path,), dbus::Error> = proxy.method_call(
                     "org.freedesktop.systemd1.Manager",
-                    "GetUnit",
+                    "LoadUnit",
                     (format!("{}.service", self.service),),
                 );
                 if let Ok(unit_path) = unit_path {
@@ -134,7 +136,7 @@ impl Runner for Systemd {
                 return Ok(());
             }
             State::Restarted => {
-                if e_state == "disabled" {
+                if e_state == "disabled" && self.enabled.unwrap_or(false) {
                     let (carries_install_info, _changes): (bool, Vec<String>) = proxy
                         .method_call(
                             "org.freedesktop.systemd1.Manager",
@@ -155,7 +157,7 @@ impl Runner for Systemd {
                 let unit_path: (Path,) = proxy
                     .method_call(
                         "org.freedesktop.systemd1.Manager",
-                        "GetUnit",
+                        "LoadUnit",
                         (format!("{}.service", self.service),),
                     )
                     .map_err(TError::DbusError)?;
@@ -193,14 +195,22 @@ impl Runner for Systemd {
                     .map_err(TError::DbusError)?;
             }
             State::Disabled => {
-                let job: (Path,) = proxy
+                if let Some(enabled) = self.enabled {
+                    if enabled {
+                        println!(
+                            "CAN'T HAVE BOTH ENABLED AND DISABLED INSTRUCTIONS AT THE SAME TIME"
+                        );
+                        return Ok(());
+                    }
+                }
+                let _job: (Path,) = proxy
                     .method_call(
                         "org.freedesktop.systemd1.Manager",
                         "StopUnit",
                         (format!("{}.service", self.service), "replace"),
                     )
                     .map_err(TError::DbusError)?;
-                let changes: (Vec<String>,) = proxy
+                let _changes: (Vec<String>,) = proxy
                     .method_call(
                         "org.freedesktop.systemd1.Manager",
                         "DisableUnitFiles",

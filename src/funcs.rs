@@ -2,10 +2,10 @@
 mod apt;
 
 mod file;
-mod recipe;
 mod file_content;
 mod looop;
 mod prompt;
+mod recipe;
 pub mod runner;
 
 #[cfg(target_os = "linux")]
@@ -29,4 +29,3 @@ pub fn interpret<T: BufRead>(buffer: &mut T) -> Result<(), TError> {
     }
     Ok(())
 }
-

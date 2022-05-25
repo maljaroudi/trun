@@ -1,6 +1,5 @@
 use core::str::Utf8Error;
 
-
 #[derive(Debug)]
 pub enum TError {
     IOError(std::io::Error),
@@ -9,7 +8,6 @@ pub enum TError {
     #[cfg(target_os = "linux")]
     DbusError(dbus::Error),
 }
-
 
 impl From<std::io::Error> for TError {
     fn from(e: std::io::Error) -> Self {
@@ -28,8 +26,6 @@ impl From<toml::de::Error> for TError {
         Self::TomlError(e)
     }
 }
-
-
 
 #[cfg(target_os = "linux")]
 impl From<dbus::Error> for TError {

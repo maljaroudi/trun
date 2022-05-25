@@ -17,11 +17,7 @@ impl Runner for Loop {
         let args = self.command.split_whitespace().collect::<Vec<&str>>();
         if args.len() == 1 {
             for _ in self.start.unwrap_or_default()..self.iterations {
-                Command::new(args[0])
-                    .spawn()
-                    ?
-                    .wait_with_output()
-                    ?;
+                Command::new(args[0]).spawn()?.wait_with_output()?;
             }
             println!("=================================================");
             return Ok(());
@@ -29,10 +25,8 @@ impl Runner for Loop {
         for _ in self.start.unwrap_or_default()..self.iterations {
             Command::new(args[0])
                 .args(&args[1..])
-                .spawn()
-                ?
-                .wait_with_output()
-                ?;
+                .spawn()?
+                .wait_with_output()?;
         }
         println!("=================================================");
         Ok(())

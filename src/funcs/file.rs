@@ -105,12 +105,10 @@ impl Runner for TFile {
                     println!("COPYING {}", s.as_os_str().to_string_lossy());
                     if self.check.unwrap_or(false) {
                         if d.exists() && s.exists() {
-                            let mut d_open =
-                                BufReader::new(File::open(d)?);
+                            let mut d_open = BufReader::new(File::open(d)?);
                             let mut d_bytes = vec![];
                             d_open.read_to_end(&mut d_bytes)?;
-                            let mut s_open =
-                                BufReader::new(File::open(s)?);
+                            let mut s_open = BufReader::new(File::open(s)?);
                             let mut s_bytes = vec![];
                             s_open.read_to_end(&mut s_bytes)?;
                             if xxh3_64(&d_bytes) == xxh3_64(&s_bytes) {
@@ -139,8 +137,7 @@ impl Runner for TFile {
                             std::fs::Permissions::from_mode(
                                 u32::from_str_radix(&format!("{perm}"), 8).unwrap(),
                             ),
-                        )
-                        ?;
+                        )?;
                     }
                 }
                 return Ok(());
@@ -158,8 +155,7 @@ impl Runner for TFile {
                 std::fs::Permissions::from_mode(
                     u32::from_str_radix(&format!("{perm}"), 8).unwrap(),
                 ),
-            )
-            ?;
+            )?;
         }
         if self.moove.unwrap_or(false) {
             std::fs::remove_file(src)?;

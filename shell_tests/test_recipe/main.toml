@@ -3,5 +3,6 @@
 name = "Recipe"
 module = "Recipe"
 panic = false
-HELL = "hello.toml"
-NOHELL = "hello1.toml"
+1 = "hello.toml"
+2 = "hello1.toml"
+3 = "hello1.toml"

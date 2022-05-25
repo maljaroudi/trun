@@ -32,8 +32,8 @@ impl From<toml::de::Error> for TError {
 
 
 #[cfg(target_os = "linux")]
-impl From<DbusError> for TError {
-    fn from(e: DbusError) -> Self {
+impl From<dbus::Error> for TError {
+    fn from(e: dbus::Error) -> Self {
         Self::DbusError(e)
     }
 }

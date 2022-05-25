@@ -1,0 +1,7 @@
+#! ../../target/release/trun
+["RECIPE TEST"]
+name = "Recipe"
+module = "Recipe"
+panic = false
+HELL = "hello.toml"
+NOHELL = "hello1.toml"

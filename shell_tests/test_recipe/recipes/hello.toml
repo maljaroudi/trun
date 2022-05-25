@@ -1,0 +1,13 @@
+["TEST BLOCK"]
+module = "BlockInFile"
+name = "Add Hello Block"
+block = """
+fn main() {
+    println!("Hello from TRUN");
+}
+"""
+signature = "MOHEEB"
+comment = "//"
+file = "./hello_world.rs"
+
+

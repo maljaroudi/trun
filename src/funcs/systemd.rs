@@ -34,7 +34,7 @@ pub struct Systemd {
 impl Runner for Systemd {
     fn run(&mut self) -> Result<(), TError> {
         println!("TASK: {}", self.name);
-        let conn = Connection::new_system().map_err(TError::DbusError)?;
+        let conn = Connection::new_system()?;
         let mut proxy = conn.with_proxy(
             "org.freedesktop.systemd1",
             "/org/freedesktop/systemd1",
@@ -64,7 +64,7 @@ impl Runner for Systemd {
                             "EnableUnitFiles",
                             (vec![format!("{}.service", self.service)], false, true),
                         )
-                        .map_err(TError::DbusError)?;
+                        ?;
                     if !carries_install_info {
                         println!(
                         "FAILED TO ENABLE THE UNIT FILE: THE UNIT FILE LACKS THE INSTALL SECTION"
@@ -72,7 +72,7 @@ impl Runner for Systemd {
                     }
                     let _reload: () = proxy
                         .method_call("org.freedesktop.systemd1.Manager", "Reload", ())
-                        .map_err(TError::DbusError)?;
+                        ?;
                 }
 
                 let unit_path: (Path,) = proxy
@@ -81,7 +81,7 @@ impl Runner for Systemd {
                         "LoadUnit",
                         (format!("{}.service", self.service),),
                     )
-                    .map_err(TError::DbusError)?;
+                    ?;
 
                 proxy = conn.with_proxy(
                     "org.freedesktop.systemd1",
@@ -91,7 +91,7 @@ impl Runner for Systemd {
 
                 let active_state: String = proxy
                     .get("org.freedesktop.systemd1.Unit", "ActiveState")
-                    .map_err(TError::DbusError)?;
+                    ?;
                 println!("ACTIVE {}", active_state);
 
                 if active_state == "active" {
@@ -100,7 +100,7 @@ impl Runner for Systemd {
                 }
                 let _start: (Path,) = proxy
                     .method_call("org.freedesktop.systemd1.Unit", "Start", ("replace",))
-                    .map_err(TError::DbusError)?;
+                    ?;
                 println!("SERVICE HAS STARTED");
                 // TODO: Make sure that the service has fully started rather
                 // than just sending the command
@@ -120,7 +120,7 @@ impl Runner for Systemd {
 
                     let active_state: String = proxy
                         .get("org.freedesktop.systemd1.Unit", "ActiveState")
-                        .map_err(TError::DbusError)?;
+                        ?;
                     println!("ACTIVE {}", active_state);
                     if active_state == "inactive" {
                         println!("SERVICE IS {active_state} ACTION IS NOT REQUIRED");
@@ -143,7 +143,7 @@ impl Runner for Systemd {
                             "EnableUnitFiles",
                             (vec![format!("{}.service", self.service)], false, true),
                         )
-                        .map_err(TError::DbusError)?;
+                        ?;
                     if !carries_install_info {
                         println!(
                         "FAILED TO ENABLE THE UNIT FILE: THE UNIT FILE LACKS THE INSTALL SECTION"
@@ -151,7 +151,7 @@ impl Runner for Systemd {
                     }
                     let _reload: () = proxy
                         .method_call("org.freedesktop.systemd1.Manager", "Reload", ())
-                        .map_err(TError::DbusError)?;
+                        ?;
                 }
 
                 let unit_path: (Path,) = proxy
@@ -160,7 +160,7 @@ impl Runner for Systemd {
                         "LoadUnit",
                         (format!("{}.service", self.service),),
                     )
-                    .map_err(TError::DbusError)?;
+                    ?;
                 proxy = conn.with_proxy(
                     "org.freedesktop.systemd1",
                     unit_path.0,
@@ -169,12 +169,12 @@ impl Runner for Systemd {
 
                 let active_state: String = proxy
                     .get("org.freedesktop.systemd1.Unit", "ActiveState")
-                    .map_err(TError::DbusError)?;
+                    ?;
                 println!("ACTIVE {}", active_state);
 
                 let _restart: (Path,) = proxy
                     .method_call("org.freedesktop.systemd1.Unit", "Restart", ("replace",))
-                    .map_err(TError::DbusError)?;
+                    ?;
                 println!("SERVICE HAS RESTARTED");
             }
             State::Enabled => {
@@ -184,7 +184,7 @@ impl Runner for Systemd {
                         "EnableUnitFiles",
                         (vec![format!("{}.service", self.service)], false, true),
                     )
-                    .map_err(TError::DbusError)?;
+                    ?;
                 if !carries_install_info {
                     println!(
                         "FAILED TO ENABLE THE UNIT FILE: THE UNIT FILE LACKS THE INSTALL SECTION"
@@ -192,7 +192,7 @@ impl Runner for Systemd {
                 }
                 let _reload: () = proxy
                     .method_call("org.freedesktop.systemd1.Manager", "Reload", ())
-                    .map_err(TError::DbusError)?;
+                    ?;
             }
             State::Disabled => {
                 if let Some(enabled) = self.enabled {
@@ -209,17 +209,17 @@ impl Runner for Systemd {
                         "StopUnit",
                         (format!("{}.service", self.service), "replace"),
                     )
-                    .map_err(TError::DbusError)?;
+                    ?;
                 let _changes: (Vec<String>,) = proxy
                     .method_call(
                         "org.freedesktop.systemd1.Manager",
                         "DisableUnitFiles",
                         (vec![format!("{}.service", self.service)], false),
                     )
-                    .map_err(TError::DbusError)?;
+                    ?;
                 let _reload: () = proxy
                     .method_call("org.freedesktop.systemd1.Manager", "Reload", ())
-                    .map_err(TError::DbusError)?;
+                    ?;
 
                 println!("SERVICE {} HAS BEEN DISABLED AND STOPPED", self.service);
             }

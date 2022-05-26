@@ -69,3 +69,20 @@ impl Runner for Apt {
         }
     }
 }
+
+#[cfg(test)]
+mod tests{
+use super::*;
+#[test]
+fn apt_installed() {
+     let apt = Apt {
+        name: "Test Apt".to_owned(),
+        state: State::Present,
+        app: "apt".to_owned(),
+     };
+    assert!(apt.run().is_ok());
+
+
+}
+
+}

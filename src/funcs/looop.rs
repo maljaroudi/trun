@@ -32,3 +32,23 @@ impl Runner for Loop {
         Ok(())
     }
 }
+
+
+
+
+#[cfg(test)]
+mod tests {
+use super::*;
+#[test]
+fn should_work() {
+let mut l = Loop {
+    name: "Loop Test".to_owned(),
+    command: "echo".to_owned(),
+    iterations: 100,
+    start: Some(5),
+};
+assert!(l.run().is_ok());
+
+}
+
+}

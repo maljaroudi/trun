@@ -75,7 +75,7 @@ mod tests{
 use super::*;
 #[test]
 fn apt_installed() {
-     let apt = Apt {
+     let mut apt = Apt {
         name: "Test Apt".to_owned(),
         state: State::Present,
         app: "apt".to_owned(),

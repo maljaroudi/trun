@@ -6,6 +6,7 @@ mod file_content;
 mod looop;
 mod prompt;
 mod recipe;
+mod opts;
 pub mod runner;
 
 #[cfg(target_os = "linux")]
@@ -25,7 +26,12 @@ pub fn interpret<T: BufRead>(buffer: &mut T) -> Result<(), TError> {
     let mut tomlized: IndexMap<String, Box<dyn Runner>> =
         toml::from_str(&ret).map_err(TError::TomlError)?;
     for runner in tomlized.values_mut() {
+        if runner.panics() {
+            runner.run()?;
+        }
+        else {
         runner.run().unwrap_or(());
+        }
     }
     Ok(())
 }

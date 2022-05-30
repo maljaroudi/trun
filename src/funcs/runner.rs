@@ -1,5 +1,5 @@
 use core::str::Utf8Error;
-
+use std::io::ErrorKind;
 #[derive(Debug)]
 pub enum TError {
     IOError(std::io::Error),
@@ -11,6 +11,9 @@ pub enum TError {
 
 impl From<std::io::Error> for TError {
     fn from(e: std::io::Error) -> Self {
+        if e.kind() == ErrorKind::NotFound {
+            eprintln!("Could Not Find Apt. This Module Cannot be Executed Without Apt");
+        }
         Self::IOError(e)
     }
 }
@@ -37,4 +40,7 @@ impl From<dbus::Error> for TError {
 #[typetag::deserialize(tag = "module")]
 pub trait Runner {
     fn run(&mut self) -> Result<(), TError>;
+    fn panics(&mut self) -> bool {
+        true
+    }
 }

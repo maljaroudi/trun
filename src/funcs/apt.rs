@@ -2,6 +2,7 @@ use super::runner::TError;
 use super::Runner;
 use serde::Deserialize;
 use std::process::Command;
+use super::opts::Opts;
 #[derive(Deserialize, PartialEq)]
 pub enum State {
     Present,
@@ -12,12 +13,15 @@ pub struct Apt {
     name: String,
     app: String,
     state: State,
+    #[serde(flatten)]
+    opts: Opts,
 }
 
 #[typetag::deserialize(name = "Apt")]
 impl Runner for Apt {
     fn run(&mut self) -> Result<(), TError> {
         println!("TASK {}", self.name);
+        // Check if Apt is installed first
         let output = Command::new("apt")
             .args(["-qq", "list", &self.app])
             .output()?;
@@ -68,6 +72,13 @@ impl Runner for Apt {
             }
         }
     }
+
+    fn panics(&mut self) -> bool {
+        if let Some(x) = self.opts.panics {
+        return x;
+        }
+        true
+    }
 }
 
 #[cfg(test)]
@@ -81,8 +92,6 @@ fn apt_installed() {
         app: "apt".to_owned(),
      };
     assert!(apt.run().is_ok());
-
-
-}
+    }
 
 }

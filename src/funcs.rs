@@ -32,8 +32,11 @@ use std::io::BufRead;
 #[derive(Deserialize)]
 #[serde(tag = "module")]
 enum Modules {
+    #[cfg(target_os = "linux")]
     Apt,
+    #[cfg(target_os = "linux")]
     Systemd,
+
     BlockInFile,
     LineInFile,
     Prompt,

@@ -11,7 +11,7 @@ struct Recipe {
     skip: Option<bool>,
     // Opts is manually flattened here due to a bug in serde (probably) with IndexMap/HashMaps
     // serde will conflict between the type. Making these fields as Strings but expecting a bool
-    // when changed to a string. 
+    // when changed to a string.
     panics: Option<bool>,
     debug: Option<bool>,
 }

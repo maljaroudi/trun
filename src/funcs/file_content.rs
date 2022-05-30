@@ -28,9 +28,7 @@ impl Runner for LineInFile {
         let source_file = Path::new(&self.file);
         if !source_file.exists() {
             let mut created = File::create(&self.file)?;
-            created
-                .write_all(self.line.as_bytes())
-                ?;
+            created.write_all(self.line.as_bytes())?;
             println!("=================================================");
             return Ok(());
         }
@@ -39,8 +37,7 @@ impl Runner for LineInFile {
             .read(true)
             .write(true)
             .append(true)
-            .open(&self.file)
-            ?;
+            .open(&self.file)?;
         let buffer = BufReader::new(&opened);
         if buffer.lines().any(|x| x.unwrap() == self.line) {
             println!("LINE EXISTS");
@@ -48,9 +45,7 @@ impl Runner for LineInFile {
             return Ok(());
         }
         let mut buf_writer = BufWriter::new(opened);
-        buf_writer
-            .write_all(self.line.as_bytes())
-            ?;
+        buf_writer.write_all(self.line.as_bytes())?;
         println!("FINISHED WRITING");
         println!("=================================================");
         Ok(())
@@ -93,16 +88,10 @@ impl Runner for BlockInFile {
             return Ok(());
         }
 
-        let mut opened = OpenOptions::new()
-            .read(true)
-            .write(true)
-            .open(&self.file)
-            ?;
+        let mut opened = OpenOptions::new().read(true).write(true).open(&self.file)?;
         let mut buffer = BufReader::new(&opened);
         let mut stringed_buffer = String::new();
-        buffer
-            .read_to_string(&mut stringed_buffer)
-            ?;
+        buffer.read_to_string(&mut stringed_buffer)?;
         let s_index = stringed_buffer.find(&spattern);
         if let Some(start) = s_index {
             let e_index = stringed_buffer.find(&epattern);
@@ -114,14 +103,9 @@ impl Runner for BlockInFile {
                 }
                 println!("BLOCK DOESN'T MATCH REPAIRING ..");
 
-                opened
-                    .seek(SeekFrom::Start(start as u64))
-                    ?;
-                write!(opened, "{}", &" ".repeat(end + epattern.len() - (start)))
-                    ?;
-                opened
-                    .seek(SeekFrom::Start((start) as u64))
-                    ?;
+                opened.seek(SeekFrom::Start(start as u64))?;
+                write!(opened, "{}", &" ".repeat(end + epattern.len() - (start)))?;
+                opened.seek(SeekFrom::Start((start) as u64))?;
                 writeln!(opened, "{}", &spattern)?;
                 writeln!(opened)?;
                 writeln!(opened, "{}", &self.block)?;

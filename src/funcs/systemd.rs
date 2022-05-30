@@ -1,13 +1,13 @@
 use super::runner::TError;
 use super::Runner;
 
+use super::opts::Opts;
 use dbus::blocking::stdintf::org_freedesktop_dbus::Properties;
 use dbus::blocking::Connection;
 use dbus::strings::Path;
 use serde::Deserialize;
 use std::fmt;
 use std::time::Duration;
-use super::opts::Opts;
 
 #[derive(Deserialize, Debug)]
 enum State {
@@ -122,9 +122,8 @@ impl Runner for Systemd {
                         println!("SERVICE IS {active_state} ACTION IS NOT REQUIRED");
                         return Ok(());
                     }
-                    let _stop: (Path,) = proxy
-                        .method_call("org.freedesktop.systemd1.Unit", "Stop", ("replace",))
-                        ?;
+                    let _stop: (Path,) =
+                        proxy.method_call("org.freedesktop.systemd1.Unit", "Stop", ("replace",))?;
                     println!("SERVICE HAS STOPPED");
                     return Ok(());
                 }
@@ -213,5 +212,4 @@ impl Runner for Systemd {
         }
         true
     }
-
 }

@@ -33,14 +33,10 @@ impl Runner for Prompt {
             println!("{} [{}/{}]", self.message, self.answer.0, self.answer.1);
             buffer.clear();
             if self.strict {
-                io::stdin()
-                    .read_line(&mut buffer)
-                    ?;
+                io::stdin().read_line(&mut buffer)?;
                 buffer = buffer.trim().to_owned();
             } else {
-                io::stdin()
-                    .read_line(&mut buffer)
-                    ?;
+                io::stdin().read_line(&mut buffer)?;
                 buffer = buffer.trim().to_lowercase();
             }
         }
@@ -55,20 +51,14 @@ impl Runner for Prompt {
         }
         let args = self.command.split_whitespace().collect::<Vec<&str>>();
         if args.len() == 1 {
-            Command::new(args[0])
-                .spawn()
-                ?
-                .wait_with_output()
-                ?;
+            Command::new(args[0]).spawn()?.wait_with_output()?;
             println!("=================================================");
             return Ok(());
         }
         Command::new(args[0])
             .args(&args[1..])
-            .spawn()
-            ?
-            .wait_with_output()
-            ?;
+            .spawn()?
+            .wait_with_output()?;
 
         println!("=================================================");
         Ok(())

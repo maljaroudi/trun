@@ -23,4 +23,11 @@ task:
       - cat Cargo.lock
   build_script: cargo build
   test_script: cargo test
+  security_script:
+    - cargo install cargo-audit
+    - carggo audit
+  format_script: cargo fmt --all -- --check
+  lint_script:
+    - rustup component add clippy
+    - cargo clippy -- -D warnings
   before_cache_script: rm -rf $CARGO_HOME/registry/index

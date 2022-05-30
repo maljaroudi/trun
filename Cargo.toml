@@ -27,3 +27,6 @@ panic = "abort"
 opt-level = 3
 strip = true
 
+
+[features]
+apt = []

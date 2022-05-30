@@ -83,15 +83,15 @@ impl Runner for Apt {
 
 #[cfg(test)]
 mod tests{
-use super::*;
 #[test]
+#[cfg(feature = "apt")]
 fn apt_installed() {
      let mut apt = Apt {
         name: "Test Apt".to_owned(),
         state: State::Present,
         app: "apt".to_owned(),
+        opts: Default::default()
      };
     assert!(apt.run().is_ok());
     }
-
 }

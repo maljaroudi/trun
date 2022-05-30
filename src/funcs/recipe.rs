@@ -14,7 +14,8 @@ pub struct Recipe {
     // serde will conflict between the type. Making these fields as Strings but expecting a bool
     // when changed to a string.
     panics: Option<bool>,
-    debug: Option<bool>,
+    //TODO: Add Debug option
+    _debug: Option<bool>,
 }
 
 impl Runner for Recipe {

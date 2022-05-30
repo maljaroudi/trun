@@ -1,5 +1,7 @@
 #[cfg(target_os = "linux")]
 pub mod apt;
+#[cfg(target_os = "linux")]
+use apt::Apt;
 
 mod file;
 mod file_content;
@@ -11,8 +13,9 @@ pub mod runner;
 
 #[cfg(target_os = "linux")]
 mod systemd;
+#[cfg(target_os = "linux")]
+use systemd::Systemd;
 
-use apt::Apt;
 use enum_dispatch::enum_dispatch;
 use file::TFile;
 use file_content::{BlockInFile, LineInFile};
@@ -24,7 +27,6 @@ use runner::{Runner, TError};
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use std::io::BufRead;
-use systemd::Systemd;
 
 #[enum_dispatch(Runner)]
 #[derive(Deserialize)]

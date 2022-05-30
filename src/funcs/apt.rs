@@ -1,3 +1,4 @@
+use super::opts::Opts;
 use super::runner::TError;
 use super::Runner;
 use serde::Deserialize;
@@ -12,20 +13,22 @@ pub struct Apt {
     name: String,
     app: String,
     state: State,
+    #[serde(flatten)]
+    opts: Opts,
 }
 
 #[typetag::deserialize(name = "Apt")]
 impl Runner for Apt {
     fn run(&mut self) -> Result<(), TError> {
         println!("TASK {}", self.name);
+        // Check if Apt is installed first
         let output = Command::new("apt")
             .args(["-qq", "list", &self.app])
             .output()
             .map_err(TError::AptError)?;
 
         let state = {
-            if !std::str::from_utf8(&output.stdout)
-                .map_err(TError::Utf8Error)?
+            if !std::str::from_utf8(&output.stdout)?
                 .lines()
                 .map(|l| return l.split_whitespace().last().unwrap().contains("[installed]"))
                 .any(|p| p)
@@ -71,5 +74,27 @@ impl Runner for Apt {
                 Ok(())
             }
         }
+    }
+
+    fn panics(&self) -> bool {
+        if let Some(x) = self.opts.panics {
+            return x;
+        }
+        true
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    #[cfg(feature = "apt")]
+    fn apt_installed() {
+        let mut apt = Apt {
+            name: "Test Apt".to_owned(),
+            state: State::Present,
+            app: "apt".to_owned(),
+            opts: Default::default(),
+        };
+        assert!(apt.run().is_ok());
     }
 }

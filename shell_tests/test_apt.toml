@@ -4,3 +4,12 @@ module = "Apt"
 name = "Install CowSay"
 app = "cowsay"
 state = "Removed"
+panics = false
+
+["Say Hello"]
+module = "Prompt"
+name = "Prompt for Hello"
+strict = false
+command = "echo hello"
+message = "Hello There"
+answer = ["Yes", "No"]

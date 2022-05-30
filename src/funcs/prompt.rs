@@ -1,3 +1,4 @@
+use super::opts::Opts;
 use super::runner::Runner;
 use super::runner::TError;
 use serde::Deserialize;
@@ -10,6 +11,8 @@ pub struct Prompt {
     command: String,
     message: String,
     answer: (String, String),
+    #[serde(flatten)]
+    opts: Opts,
 }
 
 #[typetag::deserialize]
@@ -69,5 +72,11 @@ impl Runner for Prompt {
 
         println!("=================================================");
         Ok(())
+    }
+    fn panics(&self) -> bool {
+        if let Some(x) = self.opts.panics {
+            return x;
+        }
+        true
     }
 }

@@ -1,3 +1,4 @@
+use super::opts::Opts;
 use super::runner::TError;
 use super::Runner;
 use serde::Deserialize;
@@ -9,6 +10,7 @@ use std::io::BufReader;
 use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use xxhash_rust::xxh3::xxh3_64;
+
 #[derive(Deserialize)]
 pub struct TFile {
     name: String,
@@ -20,7 +22,10 @@ pub struct TFile {
     #[serde(rename = "move")]
     moove: Option<bool>,
     items: Option<HashMap<String, Vec<PathBuf>>>,
+    #[serde(flatten)]
+    opts: Opts,
 }
+
 #[typetag::deserialize(name = "File")]
 impl Runner for TFile {
     fn run(&mut self) -> Result<(), TError> {
@@ -167,5 +172,11 @@ impl Runner for TFile {
 
         println!("=================================================");
         Ok(())
+    }
+    fn panics(&self) -> bool {
+        if let Some(x) = self.opts.panics {
+            return x;
+        }
+        true
     }
 }

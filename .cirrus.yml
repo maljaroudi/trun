@@ -25,7 +25,7 @@ task:
   test_script: cargo test
   security_script:
     - cargo install cargo-audit
-    - carggo audit
+    - cargo audit
   format_script: cargo fmt --all -- --check
   lint_script:
     - rustup component add clippy

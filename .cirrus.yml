@@ -6,12 +6,14 @@ task:
       prebuild_script:
         - apt update
         - apt install libdbus-1-dev pkg-config -y
+      debian_test_script: cargo test --all-features
     - name: macos
       macos_instance:
         image: ghcr.io/cirruslabs/macos-monterey-base:latest
       env:
         PATH: $PATH:$HOME/.cargo/bin
       install_script: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      macos_test_script: cargo test
 
   registry_cache:
     folder: $CARGO_HOME/registry
@@ -22,7 +24,6 @@ task:
       - rustc --version
       - cat Cargo.lock
   build_script: cargo build
-  test_script: cargo test
   security_script:
     - cargo install cargo-audit
     - cargo audit

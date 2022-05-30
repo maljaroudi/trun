@@ -86,6 +86,7 @@ mod tests {
     #[test]
     #[cfg(feature = "apt")]
     fn apt_installed() {
+        use super::*;
         let mut apt = Apt {
             name: "Test Apt".to_owned(),
             state: State::Present,

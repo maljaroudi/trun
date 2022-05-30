@@ -20,7 +20,6 @@ pub struct LineInFile {
     opts: Opts,
 }
 
-#[typetag::deserialize]
 impl Runner for LineInFile {
     fn run(&mut self) -> Result<(), TError> {
         println!("=================================================");
@@ -58,7 +57,7 @@ impl Runner for LineInFile {
     }
 }
 #[derive(Deserialize)]
-struct BlockInFile {
+pub struct BlockInFile {
     name: String,
     block: String,
     file: PathBuf,
@@ -68,7 +67,6 @@ struct BlockInFile {
     opts: Opts,
 }
 
-#[typetag::deserialize]
 impl Runner for BlockInFile {
     fn run(&mut self) -> Result<(), TError> {
         println!("=================================================");

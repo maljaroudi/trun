@@ -26,7 +26,6 @@ pub struct TFile {
     opts: Opts,
 }
 
-#[typetag::deserialize(name = "File")]
 impl Runner for TFile {
     fn run(&mut self) -> Result<(), TError> {
         println!("=================================================");

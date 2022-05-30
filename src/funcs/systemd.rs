@@ -34,7 +34,6 @@ pub struct Systemd {
     opts: Opts,
 }
 //TODO: complete the systemd module by implementing the State enum variants
-#[typetag::deserialize]
 impl Runner for Systemd {
     fn run(&mut self) -> Result<(), TError> {
         println!("TASK: {}", self.name);

@@ -2,10 +2,7 @@ task:
   matrix:
     - name: linux
       container:
-        image: rust:latest
-      prebuild_script:
-        - apt update
-        - apt install libdbus-1-dev pkg-config -y
+        dockerfile: .ci/Dockerfile
       debian_test_script: cargo test --all-features
     - name: macos
       macos_instance:
@@ -13,6 +10,8 @@ task:
       env:
         PATH: $PATH:$HOME/.cargo/bin
       install_script: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      install_audit_script: cargo install cargo-audit
+      add_clippy_fmt_script: rustup component add clippy && rustup component add rustfmt
       macos_test_script: cargo test
 
   registry_cache:
@@ -24,11 +23,7 @@ task:
       - rustc --version
       - cat Cargo.lock
   build_script: cargo build
-  security_script:
-    - cargo install cargo-audit
-    - cargo audit
+  security_script: cargo audit
   format_script: cargo fmt --all -- --check
-  lint_script:
-    - rustup component add clippy
-    - cargo clippy -- -D warnings
+  lint_script: cargo clippy -- -D warnings
   before_cache_script: rm -rf $CARGO_HOME/registry/index

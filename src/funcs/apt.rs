@@ -3,11 +3,35 @@ use super::runner::TError;
 use super::Runner;
 use serde::Deserialize;
 use std::process::Command;
+
+/// The state for the apt package, currently TRun supports Present and Removed Options.
+/// TRun will not install a package that has already been installed, or removed.
 #[derive(Deserialize, PartialEq)]
 pub enum State {
+    /// Aliases: Installed
+    #[serde(alias = "Installed")]
     Present,
+    /// Aliases: Uninstalled
+    #[serde(alias = "Uninstalled")]
     Removed,
 }
+
+/// The apt struct uses the same structure as other modules. To use this struct in TOML file the
+/// user has to specify a unique name for the task, a valid application name, and the state from
+/// the State Enum.
+/// Optionally, it is possible to add any optional parameters such as debug and panics which
+/// allows the user to control the flow of the deployment.
+/// # Example Toml File:
+/// ```toml
+/// ["Install CowSay"]
+/// module = "Apt"
+/// name = "Install CowSay"
+/// app = "cowsay"
+/// state = "Removed"
+/// panics = false
+/// ```
+/// In this example, TRun will make sure that cowsay is uninstalled from the system and not panic
+/// when it finds any error in the process (such as not having apt in the system to begin with).
 #[derive(Deserialize)]
 pub struct Apt {
     name: String,
@@ -17,7 +41,6 @@ pub struct Apt {
     opts: Opts,
 }
 
-#[typetag::deserialize(name = "Apt")]
 impl Runner for Apt {
     fn run(&mut self) -> Result<(), TError> {
         println!("TASK {}", self.name);

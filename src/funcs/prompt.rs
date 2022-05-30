@@ -15,7 +15,6 @@ pub struct Prompt {
     opts: Opts,
 }
 
-#[typetag::deserialize]
 impl Runner for Prompt {
     fn run(&mut self) -> Result<(), TError> {
         println!("=================================================");

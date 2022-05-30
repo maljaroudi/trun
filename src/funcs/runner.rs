@@ -1,4 +1,6 @@
 use core::str::Utf8Error;
+use enum_dispatch::enum_dispatch;
+use serde::de::DeserializeOwned;
 use std::io::ErrorKind;
 #[derive(Debug)]
 pub enum TError {
@@ -37,10 +39,15 @@ impl From<dbus::Error> for TError {
     }
 }
 
-#[typetag::deserialize(tag = "module")]
-pub trait Runner {
-    fn run(&mut self) -> Result<(), TError>;
-    fn panics(&self) -> bool {
+#[enum_dispatch]
+pub trait Runner: DeserializeOwned {
+    fn run(&mut self) -> Result<(), TError>
+    where
+        Self: Sized + DeserializeOwned;
+    fn panics(&self) -> bool
+    where
+        Self: Sized + DeserializeOwned,
+    {
         true
     }
 }

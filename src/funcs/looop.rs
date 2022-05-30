@@ -13,7 +13,7 @@ pub struct Loop {
     #[serde(flatten)]
     opts: Opts,
 }
-#[typetag::deserialize]
+
 impl Runner for Loop {
     fn run(&mut self) -> Result<(), TError> {
         println!("=================================================");

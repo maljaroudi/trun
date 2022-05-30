@@ -17,7 +17,7 @@ module = "Apt"
 name = "Install Apt"
 app = "apt"
 state = "Present"
-panics = true
+panics = false
 
 ["TEST PROMPT"]
 module = "Prompt"

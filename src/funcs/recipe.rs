@@ -3,8 +3,9 @@ use indexmap::IndexMap;
 use serde::Deserialize;
 use std::fs::File;
 use std::io::BufReader;
+
 #[derive(Deserialize)]
-struct Recipe {
+pub struct Recipe {
     name: String,
     #[serde(flatten)]
     steps: IndexMap<String, String>,
@@ -16,7 +17,6 @@ struct Recipe {
     debug: Option<bool>,
 }
 
-#[typetag::deserialize(name = "Recipe")]
 impl Runner for Recipe {
     fn run(&mut self) -> Result<(), TError> {
         println!("STARTING TRUN RECIPE: {}", self.name);

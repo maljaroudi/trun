@@ -25,7 +25,7 @@ impl Runner for Apt {
         let output = Command::new("apt")
             .args(["-qq", "list", &self.app])
             .output()
-            .map_err(TError::AptError)?;
+            ?;
 
         let state = {
             if !std::str::from_utf8(&output.stdout)?
@@ -45,10 +45,10 @@ impl Runner for Apt {
                     let install = Command::new("apt")
                         .args(["install", "-y", &self.app])
                         .output()
-                        .map_err(TError::AptError)?;
+                        ?;
                     if install.status.code().unwrap() != 0 {
                         println!("Error Installing The Package");
-                        println!("{}", std::str::from_utf8(&install.stderr).unwrap());
+                        println!("{}", std::str::from_utf8(&install.stderr)?);
                         return Ok(());
                     }
                     println!("Package is installed successfully");
@@ -62,7 +62,7 @@ impl Runner for Apt {
                     let uninstall = Command::new("apt")
                         .args(["remove", "-y", &self.app])
                         .output()
-                        .map_err(TError::AptError)?;
+                        ?;
                     if uninstall.status.code().unwrap() != 0 {
                         println!("Error Uninstalling The Package");
                         return Ok(());

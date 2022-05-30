@@ -35,7 +35,7 @@ impl Runner for TFile {
         if let Some(exists) = self.exists {
             if !exists {
                 if src.exists() {
-                    std::fs::remove_file(&src).map_err(TError::FileError)?;
+                    std::fs::remove_file(&src)?;
                     println!("REMOVING FILE ...");
                 } else {
                     println!("FILE DOES NOT EXIST. CONTINUING ...");
@@ -65,16 +65,16 @@ impl Runner for TFile {
         let dest = Path::new(&dest_unwraped);
         if self.check.unwrap_or(false) && self.items.is_none() {
             if dest.exists() && src.exists() {
-                let mut d_open = BufReader::new(File::open(dest).map_err(TError::FileError)?);
+                let mut d_open = BufReader::new(File::open(dest)?);
                 let mut d_bytes = vec![];
-                d_open.read_to_end(&mut d_bytes).map_err(TError::IOError)?;
-                let mut s_open = BufReader::new(File::open(src).map_err(TError::FileError)?);
+                d_open.read_to_end(&mut d_bytes)?;
+                let mut s_open = BufReader::new(File::open(src)?);
                 let mut s_bytes = vec![];
-                s_open.read_to_end(&mut s_bytes).map_err(TError::IOError)?;
+                s_open.read_to_end(&mut s_bytes)?;
                 if xxh3_64(&d_bytes) == xxh3_64(&s_bytes) {
                     println!("BOTH FILES MATCHES");
                     if self.moove.unwrap_or(false) {
-                        std::fs::remove_file(src).map_err(TError::FileError)?;
+                        std::fs::remove_file(src)?;
                     }
                     println!("=================================================");
                     return Ok(());
@@ -111,17 +111,17 @@ impl Runner for TFile {
                     if self.check.unwrap_or(false) {
                         if d.exists() && s.exists() {
                             let mut d_open =
-                                BufReader::new(File::open(d).map_err(TError::FileError)?);
+                                BufReader::new(File::open(d)?);
                             let mut d_bytes = vec![];
-                            d_open.read_to_end(&mut d_bytes).map_err(TError::IOError)?;
+                            d_open.read_to_end(&mut d_bytes)?;
                             let mut s_open =
-                                BufReader::new(File::open(s).map_err(TError::IOError)?);
+                                BufReader::new(File::open(s)?);
                             let mut s_bytes = vec![];
-                            s_open.read_to_end(&mut s_bytes).map_err(TError::IOError)?;
+                            s_open.read_to_end(&mut s_bytes)?;
                             if xxh3_64(&d_bytes) == xxh3_64(&s_bytes) {
                                 println!("BOTH FILES MATCHES");
                                 if self.moove.unwrap_or(false) {
-                                    std::fs::remove_file(s).map_err(TError::FileError)?;
+                                    std::fs::remove_file(s)?;
                                 }
                                 println!("=================================================");
                                 continue;
@@ -133,9 +133,9 @@ impl Runner for TFile {
                             continue;
                         }
                     }
-                    fs::copy(s, d).map_err(TError::FileError)?;
+                    fs::copy(s, d)?;
                     if self.moove.unwrap_or(false) {
-                        std::fs::remove_file(s).map_err(TError::FileError)?;
+                        std::fs::remove_file(s)?;
                     }
                     if let Some(perm) = self.permissions {
                         println!("Setting Permissions");
@@ -145,7 +145,7 @@ impl Runner for TFile {
                                 u32::from_str_radix(&format!("{perm}"), 8).unwrap(),
                             ),
                         )
-                        .map_err(TError::FileError)?;
+                        ?;
                     }
                 }
                 return Ok(());
@@ -155,7 +155,7 @@ impl Runner for TFile {
             return Ok(());
         }
         println!("COPYING {}", src.as_os_str().to_string_lossy());
-        std::fs::copy(&src, &dest).map_err(TError::FileError)?;
+        std::fs::copy(&src, &dest)?;
         if let Some(perm) = self.permissions {
             println!("Setting Permissions");
             std::fs::set_permissions(
@@ -164,10 +164,10 @@ impl Runner for TFile {
                     u32::from_str_radix(&format!("{perm}"), 8).unwrap(),
                 ),
             )
-            .map_err(TError::FileError)?;
+            ?;
         }
         if self.moove.unwrap_or(false) {
-            std::fs::remove_file(src).map_err(TError::FileError)?;
+            std::fs::remove_file(src)?;
         }
 
         println!("=================================================");

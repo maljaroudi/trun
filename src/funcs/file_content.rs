@@ -27,10 +27,10 @@ impl Runner for LineInFile {
         println!("TASK {}", self.name);
         let source_file = Path::new(&self.file);
         if !source_file.exists() {
-            let mut created = File::create(&self.file).map_err(TError::FileError)?;
+            let mut created = File::create(&self.file)?;
             created
                 .write_all(self.line.as_bytes())
-                .map_err(TError::FileError)?;
+                ?;
             println!("=================================================");
             return Ok(());
         }
@@ -40,7 +40,7 @@ impl Runner for LineInFile {
             .write(true)
             .append(true)
             .open(&self.file)
-            .map_err(TError::FileError)?;
+            ?;
         let buffer = BufReader::new(&opened);
         if buffer.lines().any(|x| x.unwrap() == self.line) {
             println!("LINE EXISTS");
@@ -50,7 +50,7 @@ impl Runner for LineInFile {
         let mut buf_writer = BufWriter::new(opened);
         buf_writer
             .write_all(self.line.as_bytes())
-            .map_err(TError::FileError)?;
+            ?;
         println!("FINISHED WRITING");
         println!("=================================================");
         Ok(())
@@ -82,12 +82,12 @@ impl Runner for BlockInFile {
         let epattern = format!("{} !~ENDING TRUN {}", &self.comment, &self.signature);
         let source_file = Path::new(&self.file);
         if !source_file.exists() {
-            let mut created = File::create(&self.file).map_err(TError::FileError)?;
-            writeln!(created, "{}", &spattern).map_err(TError::FileError)?;
-            writeln!(created).map_err(TError::FileError)?;
-            writeln!(created, "{}", &self.block).map_err(TError::FileError)?;
-            writeln!(created).map_err(TError::FileError)?;
-            writeln!(created, "{}", &epattern).map_err(TError::FileError)?;
+            let mut created = File::create(&self.file)?;
+            writeln!(created, "{}", &spattern)?;
+            writeln!(created)?;
+            writeln!(created, "{}", &self.block)?;
+            writeln!(created)?;
+            writeln!(created, "{}", &epattern)?;
             println!("FINISHED WRITING");
             println!("=================================================");
             return Ok(());
@@ -97,12 +97,12 @@ impl Runner for BlockInFile {
             .read(true)
             .write(true)
             .open(&self.file)
-            .map_err(TError::FileError)?;
+            ?;
         let mut buffer = BufReader::new(&opened);
         let mut stringed_buffer = String::new();
         buffer
             .read_to_string(&mut stringed_buffer)
-            .map_err(TError::FileError)?;
+            ?;
         let s_index = stringed_buffer.find(&spattern);
         if let Some(start) = s_index {
             let e_index = stringed_buffer.find(&epattern);
@@ -116,17 +116,17 @@ impl Runner for BlockInFile {
 
                 opened
                     .seek(SeekFrom::Start(start as u64))
-                    .map_err(TError::SeekError)?;
+                    ?;
                 write!(opened, "{}", &" ".repeat(end + epattern.len() - (start)))
-                    .map_err(TError::SeekError)?;
+                    ?;
                 opened
                     .seek(SeekFrom::Start((start) as u64))
-                    .map_err(TError::SeekError)?;
-                writeln!(opened, "{}", &spattern).map_err(TError::FileError)?;
-                writeln!(opened).map_err(TError::FileError)?;
-                writeln!(opened, "{}", &self.block).map_err(TError::FileError)?;
-                writeln!(opened).map_err(TError::FileError)?;
-                writeln!(opened, "{}", &epattern).map_err(TError::FileError)?;
+                    ?;
+                writeln!(opened, "{}", &spattern)?;
+                writeln!(opened)?;
+                writeln!(opened, "{}", &self.block)?;
+                writeln!(opened)?;
+                writeln!(opened, "{}", &epattern)?;
                 //opened.write(&self.block.as_bytes())?;
                 println!("FINISHED WRITING");
                 println!("=================================================");
@@ -135,12 +135,12 @@ impl Runner for BlockInFile {
             }
         }
         // let mut buf_writer = BufWriter::new(opened);
-        opened.seek(SeekFrom::End(0)).map_err(TError::FileError)?;
-        writeln!(opened, "{}", &spattern).map_err(TError::FileError)?;
-        writeln!(opened).map_err(TError::FileError)?;
-        writeln!(opened, "{}", &self.block).map_err(TError::FileError)?;
-        writeln!(opened).map_err(TError::FileError)?;
-        writeln!(opened, "{}", &epattern).map_err(TError::FileError)?;
+        opened.seek(SeekFrom::End(0))?;
+        writeln!(opened, "{}", &spattern)?;
+        writeln!(opened)?;
+        writeln!(opened, "{}", &self.block)?;
+        writeln!(opened)?;
+        writeln!(opened, "{}", &epattern)?;
         //buf_writer.write_all(self.block.as_bytes())?;
         println!("FINISHED WRITING");
         println!("=================================================");

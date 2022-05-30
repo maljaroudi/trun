@@ -124,7 +124,7 @@ impl Runner for Systemd {
                     }
                     let _stop: (Path,) = proxy
                         .method_call("org.freedesktop.systemd1.Unit", "Stop", ("replace",))
-                        .unwrap();
+                        ?;
                     println!("SERVICE HAS STOPPED");
                     return Ok(());
                 }

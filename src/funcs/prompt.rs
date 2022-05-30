@@ -35,12 +35,12 @@ impl Runner for Prompt {
             if self.strict {
                 io::stdin()
                     .read_line(&mut buffer)
-                    .map_err(TError::IOError)?;
+                    ?;
                 buffer = buffer.trim().to_owned();
             } else {
                 io::stdin()
                     .read_line(&mut buffer)
-                    .map_err(TError::IOError)?;
+                    ?;
                 buffer = buffer.trim().to_lowercase();
             }
         }
@@ -57,18 +57,18 @@ impl Runner for Prompt {
         if args.len() == 1 {
             Command::new(args[0])
                 .spawn()
-                .map_err(TError::CmdError)?
+                ?
                 .wait_with_output()
-                .map_err(TError::IOError)?;
+                ?;
             println!("=================================================");
             return Ok(());
         }
         Command::new(args[0])
             .args(&args[1..])
             .spawn()
-            .map_err(TError::CmdError)?
+            ?
             .wait_with_output()
-            .map_err(TError::IOError)?;
+            ?;
 
         println!("=================================================");
         Ok(())

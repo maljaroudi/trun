@@ -23,9 +23,9 @@ impl Runner for Loop {
             for _ in self.start.unwrap_or_default()..self.iterations {
                 Command::new(args[0])
                     .spawn()
-                    .map_err(TError::CmdError)?
+                    ?
                     .wait_with_output()
-                    .map_err(TError::IOError)?;
+                    ?;
             }
             println!("=================================================");
             return Ok(());
@@ -34,9 +34,9 @@ impl Runner for Loop {
             Command::new(args[0])
                 .args(&args[1..])
                 .spawn()
-                .map_err(TError::CmdError)?
+                ?
                 .wait_with_output()
-                .map_err(TError::IOError)?;
+                ?;
         }
         println!("=================================================");
         Ok(())

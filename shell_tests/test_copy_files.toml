@@ -1,7 +1,7 @@
 #! ../target/release/trun
 ["COPY TO HOME"]
 module = "File"
-name = "Copy MySelf to Moheeb's homedir"
+name = "Copy Cargo.lock to CargoCopy0"
 src = "~! SRCS !~"
 dest = "~! DESTS !~"
 items = { SRCS = ["./Cargo.lock"], DESTS = ["./CargoCopy0"] }

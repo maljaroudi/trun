@@ -4,9 +4,9 @@ mod apt;
 mod file;
 mod file_content;
 mod looop;
+mod opts;
 mod prompt;
 mod recipe;
-mod opts;
 pub mod runner;
 
 #[cfg(target_os = "linux")]
@@ -18,7 +18,7 @@ use std::io::BufRead;
 //#[derive(Deserialize)]
 //struct Content(Vec<Box<dyn  Runner>>);
 
-pub fn interpret<T: BufRead>(buffer: &mut T) -> Result<(), TError> {
+pub fn interpret<T: BufRead>(buffer: &mut T, nested_panic: bool) -> Result<(), TError> {
     let mut ret = String::new();
     buffer
         .read_to_string(&mut ret)
@@ -26,11 +26,10 @@ pub fn interpret<T: BufRead>(buffer: &mut T) -> Result<(), TError> {
     let mut tomlized: IndexMap<String, Box<dyn Runner>> =
         toml::from_str(&ret).map_err(TError::TomlError)?;
     for runner in tomlized.values_mut() {
-        if runner.panics() {
+        if runner.panics() || nested_panic {
             runner.run()?;
-        }
-        else {
-        runner.run().unwrap_or(());
+        } else {
+            runner.run().unwrap_or(());
         }
     }
     Ok(())

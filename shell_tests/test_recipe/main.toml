@@ -2,7 +2,7 @@
 ["RECIPE TEST"]
 name = "Recipe"
 module = "Recipe"
-panic = false
 1 = "hello.toml"
 2 = "hello1.toml"
 3 = "hello1.toml"
+panics = false

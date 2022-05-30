@@ -40,7 +40,7 @@ impl From<dbus::Error> for TError {
 #[typetag::deserialize(tag = "module")]
 pub trait Runner {
     fn run(&mut self) -> Result<(), TError>;
-    fn panics(&mut self) -> bool {
+    fn panics(&self) -> bool {
         true
     }
 }

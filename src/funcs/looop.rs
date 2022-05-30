@@ -1,13 +1,17 @@
+use super::opts::Opts;
 use super::runner::Runner;
 use super::runner::TError;
 use serde::Deserialize;
 use std::process::Command;
+
 #[derive(Deserialize)]
 pub struct Loop {
     name: String,
     command: String,
     iterations: usize,
     start: Option<usize>,
+    #[serde(flatten)]
+    opts: Opts,
 }
 #[typetag::deserialize]
 impl Runner for Loop {
@@ -31,24 +35,26 @@ impl Runner for Loop {
         println!("=================================================");
         Ok(())
     }
+    fn panics(&self) -> bool {
+        if let Some(x) = self.opts.panics {
+            return x;
+        }
+        true
+    }
 }
-
-
-
 
 #[cfg(test)]
 mod tests {
-use super::*;
-#[test]
-fn should_work() {
-let mut l = Loop {
-    name: "Loop Test".to_owned(),
-    command: "echo".to_owned(),
-    iterations: 100,
-    start: Some(5),
-};
-assert!(l.run().is_ok());
-
-}
-
+    use super::*;
+    #[test]
+    fn should_work() {
+        let mut l = Loop {
+            name: "Loop Test".to_owned(),
+            command: "echo".to_owned(),
+            iterations: 100,
+            start: Some(5),
+            opts: Default::default(),
+        };
+        assert!(l.run().is_ok());
+    }
 }

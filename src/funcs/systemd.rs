@@ -7,6 +7,8 @@ use dbus::strings::Path;
 use serde::Deserialize;
 use std::fmt;
 use std::time::Duration;
+use super::opts::Opts;
+
 #[derive(Deserialize, Debug)]
 enum State {
     Started,
@@ -28,6 +30,8 @@ pub struct Systemd {
     service: String,
     state: State,
     enabled: Option<bool>,
+    #[serde(flatten)]
+    opts: Opts,
 }
 //TODO: complete the systemd module by implementing the State enum variants
 #[typetag::deserialize]
@@ -203,4 +207,11 @@ impl Runner for Systemd {
         }
         Ok(())
     }
+    fn panics(&self) -> bool {
+        if let Some(x) = self.opts.panics {
+            return x;
+        }
+        true
+    }
+
 }

@@ -1,3 +1,4 @@
+use super::opts::Opts;
 use super::runner::TError;
 use super::Runner;
 use serde::Deserialize;
@@ -9,12 +10,16 @@ use std::io::{BufRead, BufReader, BufWriter};
 use std::io::{Seek, SeekFrom};
 use std::path::Path;
 use std::path::PathBuf;
+
 #[derive(Deserialize)]
 pub struct LineInFile {
     name: String,
     line: String,
     file: PathBuf,
+    #[serde(flatten)]
+    opts: Opts,
 }
+
 #[typetag::deserialize]
 impl Runner for LineInFile {
     fn run(&mut self) -> Result<(), TError> {
@@ -45,6 +50,12 @@ impl Runner for LineInFile {
         println!("=================================================");
         Ok(())
     }
+    fn panics(&self) -> bool {
+        if let Some(x) = self.opts.panics {
+            return x;
+        }
+        true
+    }
 }
 #[derive(Deserialize)]
 struct BlockInFile {
@@ -53,6 +64,8 @@ struct BlockInFile {
     file: PathBuf,
     signature: String,
     comment: String,
+    #[serde(flatten)]
+    opts: Opts,
 }
 
 #[typetag::deserialize]
@@ -117,6 +130,13 @@ impl Runner for BlockInFile {
         println!("=================================================");
         Ok(())
     }
+
+    fn panics(&self) -> bool {
+        if let Some(x) = self.opts.panics {
+            return x;
+        }
+        true
+    }
 }
 
 #[cfg(test)]
@@ -130,6 +150,7 @@ mod tests {
             name: "Test".to_owned(),
             line: "This IS a Test String".to_owned(),
             file: "test_line.txt".into(),
+            opts: Default::default(),
         };
         f.run().unwrap();
         let mut ff = File::open("test_line.txt").unwrap();
@@ -145,7 +166,8 @@ mod tests {
             block: "This is a test block for the block in file module,\nit should be able to detect the block in the file if programmed correctly".to_owned(),
             file: "test_block.txt".into(),
             comment: "//".to_owned(),
-            signature: "TEST".to_owned()
+            signature: "TEST".to_owned(),
+            opts: Default::default()
         };
         f.run().unwrap();
         let mut ff = File::open("test_block.txt").unwrap();

@@ -11,6 +11,6 @@ fn main() -> Result<(), TError> {
     }
     let f = File::open(&args[1])?;
     let mut buffer = BufReader::new(f);
-    interpret(&mut buffer)?;
+    interpret(&mut buffer, false)?;
     Ok(())
 }

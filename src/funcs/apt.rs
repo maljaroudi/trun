@@ -1,8 +1,8 @@
+use super::opts::Opts;
 use super::runner::TError;
 use super::Runner;
 use serde::Deserialize;
 use std::process::Command;
-use super::opts::Opts;
 #[derive(Deserialize, PartialEq)]
 pub enum State {
     Present,
@@ -73,25 +73,25 @@ impl Runner for Apt {
         }
     }
 
-    fn panics(&mut self) -> bool {
+    fn panics(&self) -> bool {
         if let Some(x) = self.opts.panics {
-        return x;
+            return x;
         }
         true
     }
 }
 
 #[cfg(test)]
-mod tests{
-#[test]
-#[cfg(feature = "apt")]
-fn apt_installed() {
-     let mut apt = Apt {
-        name: "Test Apt".to_owned(),
-        state: State::Present,
-        app: "apt".to_owned(),
-        opts: Default::default()
-     };
-    assert!(apt.run().is_ok());
+mod tests {
+    #[test]
+    #[cfg(feature = "apt")]
+    fn apt_installed() {
+        let mut apt = Apt {
+            name: "Test Apt".to_owned(),
+            state: State::Present,
+            app: "apt".to_owned(),
+            opts: Default::default(),
+        };
+        assert!(apt.run().is_ok());
     }
 }

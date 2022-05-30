@@ -10,6 +10,15 @@ signature = "MOHEEB"
 comment = "//"
 file = "./hello_world.rs"
 
+
+
+["Test APT"]
+module = "Apt"
+name = "Install Apt"
+app = "apt"
+state = "Present"
+panics = false
+
 ["TEST PROMPT"]
 module = "Prompt"
 name = "Prompt Test"
@@ -17,5 +26,4 @@ command = "echo hello"
 strict = true
 message = "Are you Sure you want to print hello?"
 answer = ["Yes","No"]
-
 

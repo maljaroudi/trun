@@ -1,0 +1,8 @@
+#! ../target/release/trun
+
+["Test Command Without Prompt"]
+name = "Say Hello"
+module = "Command"
+command = "echo hello"
+message = "Are you Sure you want to print hello?"
+

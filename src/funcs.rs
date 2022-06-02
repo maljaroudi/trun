@@ -3,11 +3,11 @@ pub mod apt;
 #[cfg(target_os = "linux")]
 use apt::Apt;
 
+mod command;
 mod file;
 mod file_content;
 mod looop;
 mod opts;
-mod prompt;
 mod recipe;
 pub mod runner;
 
@@ -16,12 +16,12 @@ mod systemd;
 #[cfg(target_os = "linux")]
 use systemd::Systemd;
 
+use command::Cmd;
 use enum_dispatch::enum_dispatch;
 use file::TFile;
 use file_content::{BlockInFile, LineInFile};
 use indexmap::IndexMap;
 use looop::Loop;
-use prompt::Prompt;
 use recipe::Recipe;
 use runner::{Runner, TError};
 use serde::de::DeserializeOwned;
@@ -39,7 +39,9 @@ enum Modules {
 
     BlockInFile,
     LineInFile,
-    Prompt,
+    #[serde(rename = "Command")]
+    Cmd,
+    #[serde(rename = "File")]
     TFile,
     Loop,
     Recipe,

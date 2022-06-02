@@ -1,13 +1,14 @@
 #! ../target/release/trun
 ["SAY HELLO"]
 name = "Say Hello"
+module = "Command"
 command = "echo hello"
 strict = true
 message = "Are you Sure you want to print hello?"
 answer = ["Yes","No"]
 
 ["SAY HI WITH STRICT PROMPT"]
-module = "Prompt"
+module = "Command"
 name = "Say Hi"
 command = "echo hi"
 strict = false
@@ -36,7 +37,7 @@ permissions = 777
 
 
 ["SAY HELLO Again"]
-module = "Prompt"
+module = "Command"
 name = "Say Hello"
 command = "echo hello"
 strict = true

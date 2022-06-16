@@ -6,7 +6,7 @@ use std::io::ErrorKind;
 pub enum TError {
     IOError(std::io::Error),
     Utf8Error(Utf8Error),
-    TomlError(toml::de::Error),
+    TomlError(toml_edit::de::Error),
     #[cfg(target_os = "linux")]
     DbusError(dbus::Error),
 }
@@ -26,8 +26,8 @@ impl From<Utf8Error> for TError {
     }
 }
 
-impl From<toml::de::Error> for TError {
-    fn from(e: toml::de::Error) -> Self {
+impl From<toml_edit::de::Error> for TError {
+    fn from(e: toml_edit::de::Error) -> Self {
         Self::TomlError(e)
     }
 }

@@ -28,6 +28,7 @@ use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use std::io::BufRead;
 
+
 #[enum_dispatch(Runner)]
 #[derive(Deserialize)]
 #[serde(tag = "module")]
@@ -58,7 +59,7 @@ pub fn interpret<T: BufRead>(buffer: &mut T, nested_panic: bool) -> Result<(), T
     buffer
         .read_to_string(&mut ret)
         .expect("Make sure the file exist and the format is correct");
-    let mut tomlized: Content = toml::from_str(&ret).map_err(TError::TomlError)?;
+    let mut tomlized: Content = toml_edit::easy::from_str(&ret).map_err(TError::TomlError)?;
     for runner in tomlized.modules.values_mut() {
         if runner.panics() || nested_panic {
             runner.run()?;

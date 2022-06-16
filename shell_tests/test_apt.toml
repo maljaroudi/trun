@@ -7,7 +7,7 @@ state = "Removed"
 panics = false
 
 ["Say Hello"]
-module = "Prompt"
+module = "Command"
 name = "Prompt for Hello"
 strict = false
 command = "echo hello"

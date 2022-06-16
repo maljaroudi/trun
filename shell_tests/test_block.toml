@@ -12,7 +12,7 @@ comment = "//"
 file = "./hello_world.rs"
 
 ["Compile Block"]
-module = "Prompt"
+module = "Command"
 name = "Compile the block in hello_world.rs"
 command = "rustc hello_world.rs"
 message = "Are you Sure you want to compile hello_world.rs?"
@@ -21,7 +21,7 @@ answer = ["Yes", "No"]
 
 
 ["Run Compiled Program"]
-module = "Prompt"
+module = "Command"
 name = "Running hello_world program"
 command = "./hello_world"
 message = "Are you sure you want to run hello_world?"
